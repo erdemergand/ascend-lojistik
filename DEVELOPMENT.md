@@ -26,3 +26,14 @@ Sayfalar `src/routes/`, Türkçe içerik `src/content/tr.ts`, header/logo `src/c
 GA4 `G-47EHL67FSH`, light/dark tema, resmî logolar, `Dijital Portal — Yakında`, Gemi Acenteliği ve `https://www.ascendlojistik.com` canonical/SEO yapısı korunmalıdır. Formlar yalnız `info@ascendlojistik.com` için mailto açar; gönderim başarısı iddia etmez. Global ağ hakkında doğrulanmamış iddia eklemeyin. Gelecekte müşteri Profit/Share/Share TL göremez, NCTS finans yalnız admin'dir; ayrıntılı kurallar `AGENTS.md` içindedir.
 
 Lovable'ın kalıcı GitHub bağlantısı, dosyaların GitHub'a aktarılmasından ayrı bir ayardır. Bağlantı doğrulanmadan çift yönlü otomatik senkronizasyon varsaymayın. Her aktarım öncesi Lovable güncel commit'ini, GitHub HEAD'i ve yerel değişiklikleri karşılaştırın; force push kullanmayın.
+
+10 Eylül 2026 tarihinde proje Settings > Git ekranında mevcut bir deponun bağlanmasının desteklenmediği, bağlantının yeni bir depo oluşturduğu doğrulandı. Bu nedenle bu hedef depoya kaynak aktarımı yapılmıştır; otomatik çift yönlü Lovable bağlantısı kurulmamıştır.
+
+## Aktarım doğrulaması
+
+- Bun 1.4.2 / Node.js 24.19.0: frozen-lockfile kurulumu, build ve typecheck başarılı.
+- Altı route yerelde HTTP 200; canonical ve GA4 mevcut. Light/dark geçişinde resmî logo dosyaları yükleniyor.
+- Özgün favicon SHA-256: `45fba09fc4d4b6ac61b7e9de154ed780653e6c9fb85be8b10e06bc7542e625a1`.
+- Favicon'un kayıpsız okunması için Lovable'da yalnız `.lovable/exports/favicon.png.base64` yardımcı dosyası eklenen `09e4fdf77473f20f9912780c6561220786c67af6` aktarım commit'i kullanıldı; uygulama kaynak tabanı değişmedi.
+- Ek lint kontrolünde mevcut kaynakta 148 Prettier biçimlendirme hatası ve 9 Fast Refresh uyarısı var. Aktarım kapsamında toplu biçim değişikliği yapılmadı. Build ve typecheck bundan etkilenmiyor.
+- Deploy/publish yapılmadı.
