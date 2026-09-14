@@ -43,15 +43,11 @@ export function SectionHeading({
   className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "max-w-3xl",
-        align === "center" && "mx-auto text-center",
-        className,
-      )}
-    >
+    <div className={cn("max-w-3xl", align === "center" && "mx-auto text-center", className)}>
       {eyebrow ? (
-        <p className={cn("eyebrow", tone === "navy" ? "text-navy-foreground" : "text-primary")}>{eyebrow}</p>
+        <p className={cn("eyebrow", tone === "navy" ? "text-navy-foreground" : "text-primary")}>
+          {eyebrow}
+        </p>
       ) : null}
       <h2
         className={cn(
@@ -96,7 +92,9 @@ export function PageHero({
             {title}
           </h1>
           {subtitle ? (
-            <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-navy-foreground/90">{subtitle}</p>
+            <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-navy-foreground/90">
+              {subtitle}
+            </p>
           ) : null}
           {children}
         </div>

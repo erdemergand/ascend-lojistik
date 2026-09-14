@@ -85,8 +85,13 @@ function NetworkPage() {
         <SectionHeading title={n.strengthsTitle} />
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {n.strengths.map((s, i) => (
-            <div key={s.title} className="rounded-xl border border-border bg-card p-8 card-elevated">
-              <p className="font-display text-3xl font-bold text-primary">{String(i + 1).padStart(2, "0")}</p>
+            <div
+              key={s.title}
+              className="rounded-xl border border-border bg-card p-8 card-elevated"
+            >
+              <p className="font-display text-3xl font-bold text-primary">
+                {String(i + 1).padStart(2, "0")}
+              </p>
               <h3 className="mt-4 font-display text-lg font-bold text-foreground">{s.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
             </div>
@@ -94,7 +99,9 @@ function NetworkPage() {
         </div>
         <div className="mt-12">
           <Button asChild size="lg">
-            <Link to="/iletisim" onClick={() => trackLead("network_quote")}>{c.nav.cta}</Link>
+            <Link to="/iletisim" onClick={() => trackLead("network_quote")}>
+              {c.nav.cta}
+            </Link>
           </Button>
         </div>
       </Section>

@@ -1,5 +1,7 @@
 # Yerel geliştirme
 
+Aktif çalışma ortamı Codex'tir. Kullanıcı şimdilik Lovable kullanmayacak; geliştirmeleri bu yerel depoda sürdürün.
+
 Kaynak: Lovable `e6fc177a-239f-49ea-9b87-a6f1080236c4`, commit `a6c64fcf61a97c14ea80e0bae1311c419cfd1fb5`.
 Hedef: https://github.com/erdemergand/ascend-lojistik (`main`).
 
@@ -35,5 +37,5 @@ Lovable'ın kalıcı GitHub bağlantısı, dosyaların GitHub'a aktarılmasında
 - Altı route yerelde HTTP 200; canonical ve GA4 mevcut. Light/dark geçişinde resmî logo dosyaları yükleniyor.
 - Özgün favicon SHA-256: `45fba09fc4d4b6ac61b7e9de154ed780653e6c9fb85be8b10e06bc7542e625a1`.
 - Favicon'un kayıpsız okunması için Lovable'da yalnız `.lovable/exports/favicon.png.base64` yardımcı dosyası eklenen `09e4fdf77473f20f9912780c6561220786c67af6` aktarım commit'i kullanıldı; uygulama kaynak tabanı değişmedi.
-- Ek lint kontrolünde mevcut kaynakta 148 Prettier biçimlendirme hatası ve 9 Fast Refresh uyarısı var. Aktarım kapsamında toplu biçim değişikliği yapılmadı. Build ve typecheck bundan etkilenmiyor.
+- Codex'teki ilk bakımda 148 Prettier biçimlendirme hatası giderildi. Lint 0 hata ve 9 mevcut Fast Refresh uyarısıyla tamamlanıyor.
 - Deploy/publish yapılmadı.

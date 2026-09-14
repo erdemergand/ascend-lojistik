@@ -1,15 +1,7 @@
-<!-- LOVABLE:BEGIN -->
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
-<!-- LOVABLE:END -->
-
 # Ascend Lojistik — Codex geliştirme bağlamı
+
+- Aktif geliştirme ortamı yerel Codex ve bu Git deposudur. Kullanıcının tercihi gereği şimdilik Lovable kullanılmaz; orada değişiklik veya senkronizasyon başlatma.
+- Bu depo Lovable'a otomatik bağlı değildir. Lovable yalnız geçmiş kaynak referansıdır. Yayımlanmış Git geçmişini yeniden yazma; force push kullanma.
 
 - Kaynak Lovable proje: `e6fc177a-239f-49ea-9b87-a6f1080236c4`.
 - Aktarım tabanı: `a6c64fcf61a97c14ea80e0bae1311c419cfd1fb5` (10 Eylül 2026 son tamamlanmış sürüm).
@@ -31,7 +23,11 @@
 
 ## Varlıklar ve yerel çalışma
 
+- Portal Acente/Taşıyıcı bilgileri yalnız şirket personeline açıktır. Müşteri ekranı, API, sorgu, arama, export, e-posta ve PDF çıktılarında ad, kimlik ve iletişim bilgileri açığa çıkarılmaz; yalnız arayüzde gizlemek yeterli değildir.
+
 - `src/assets/*.asset.json` Lovable varlık kimliklerini saklar. Gerçek logo ve hero dosyaları aynı URL yolunda `public/__l5e/assets-v1/` altında yerel olarak bulunur; dış Lovable varlık servisine bağımlılık gerektirmez.
 - `public/brand/world-map.svg` özgün haritadır. Varlık değişikliklerinde dark/light ve mobil görünümü kontrol et.
 - `@lovable.dev/vite-tanstack-config` mevcut eklentileri sağlar; aynı TanStack/React/Tailwind eklentilerini ikinci kez ekleme.
 - `DEVELOPMENT.md` kurulum ve doğrulama adımlarını içerir.
+
+- Kullanıcı tercihi (15 Eylül 2026): Tamamlanan güncellemeleri kontrollerden sonra commit ve push yap. Force push ve deploy yapma; yerel çalışma verilerini veya sırları Git’e ekleme.

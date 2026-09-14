@@ -53,12 +53,27 @@ export const tr = {
       eyebrow: "Neden Ascend?",
       title: "Operasyonun her adımında öngörülebilirlik",
       items: [
-        { title: "Güvenilirlik", text: "Taahhüt edilen sürece bağlı, izlenebilir ve raporlanabilir operasyon yönetimi." },
-        { title: "Hız", text: "Hızlı fiyatlandırma, hızlı yükleme planlaması ve kısa reaksiyon süresi." },
-        { title: "Şeffaflık", text: "Süreç boyunca net bilgilendirme; sürpriz maliyet ve belirsizlik yok." },
+        {
+          title: "Güvenilirlik",
+          text: "Taahhüt edilen sürece bağlı, izlenebilir ve raporlanabilir operasyon yönetimi.",
+        },
+        {
+          title: "Hız",
+          text: "Hızlı fiyatlandırma, hızlı yükleme planlaması ve kısa reaksiyon süresi.",
+        },
+        {
+          title: "Şeffaflık",
+          text: "Süreç boyunca net bilgilendirme; sürpriz maliyet ve belirsizlik yok.",
+        },
         { title: "Esneklik", text: "Değişen rota, yük tipi ve termin ihtiyaçlarına anında uyum." },
-        { title: "Global Erişim", text: "Avrupa, Amerika, Uzak Doğu, Orta Doğu ve Afrika’da iş ortaklığı ağı." },
-        { title: "Müşteri Odaklılık", text: "Tek muhatap, uçtan uca sorumluluk ve ihtiyaca özel çözüm tasarımı." },
+        {
+          title: "Global Erişim",
+          text: "Avrupa, Amerika, Uzak Doğu, Orta Doğu ve Afrika’da iş ortaklığı ağı.",
+        },
+        {
+          title: "Müşteri Odaklılık",
+          text: "Tek muhatap, uçtan uca sorumluluk ve ihtiyaca özel çözüm tasarımı.",
+        },
       ],
     },
     digital: {
@@ -134,9 +149,14 @@ export const tr = {
         id: "karayolu",
         icon: "truck",
         title: "Karayolu Taşımacılığı",
-        short: "Avrupa, Balkanlar, BDT ve Orta Doğu rotalarında komple ve parsiyel karayolu çözümleri.",
+        short:
+          "Avrupa, Balkanlar, BDT ve Orta Doğu rotalarında komple ve parsiyel karayolu çözümleri.",
         body: "Tenteli, frigorifik, mega ve özel ekipman ihtiyaçlarına göre araç planlaması yapıyor; gümrük ve transit süreçlerini operasyonun bir parçası olarak yönetiyoruz.",
-        points: ["Komple (FTL) ve parsiyel (LTL) yükleme", "Özel ekipman ve frigorifik araç planlaması", "Transit ve gümrük süreç takibi"],
+        points: [
+          "Komple (FTL) ve parsiyel (LTL) yükleme",
+          "Özel ekipman ve frigorifik araç planlaması",
+          "Transit ve gümrük süreç takibi",
+        ],
       },
       {
         id: "denizyolu",
@@ -144,15 +164,24 @@ export const tr = {
         title: "Denizyolu Taşımacılığı",
         short: "FCL ve LCL konteyner taşımacılığında global liman ağı ile rekabetçi çözümler.",
         body: "Ana hat armatörleri ve acente ağımızla yükünüz için doğru servis, doğru transit süre ve doğru maliyet dengesini kuruyoruz.",
-        points: ["FCL / LCL konteyner operasyonu", "Liman-liman ve kapı-kapı çözümler", "Konteyner tipi ve booking yönetimi"],
+        points: [
+          "FCL / LCL konteyner operasyonu",
+          "Liman-liman ve kapı-kapı çözümler",
+          "Konteyner tipi ve booking yönetimi",
+        ],
       },
       {
         id: "gemi-acenteligi",
         icon: "anchor",
         title: "Gemi Acenteliği",
-        short: "Liman çağrılarında koordinasyon, dokümantasyon ve saha süreçlerini tek merkezden yönetiyoruz.",
+        short:
+          "Liman çağrılarında koordinasyon, dokümantasyon ve saha süreçlerini tek merkezden yönetiyoruz.",
         body: "Gemi ve liman operasyonlarında ilgili taraflar arasındaki koordinasyonu sağlıyor; yanaşma, evrak ve operasyon süreçlerini şeffaf biçimde takip ediyoruz.",
-        points: ["Liman çağrısı ve operasyon koordinasyonu", "Dokümantasyon ve resmi süreç takibi", "Gemi, liman ve saha tarafları arasında tek muhatap"],
+        points: [
+          "Liman çağrısı ve operasyon koordinasyonu",
+          "Dokümantasyon ve resmi süreç takibi",
+          "Gemi, liman ve saha tarafları arasında tek muhatap",
+        ],
       },
       {
         id: "havayolu",
@@ -160,36 +189,56 @@ export const tr = {
         title: "Havayolu Taşımacılığı",
         short: "Zaman kritik yükler için hızlı, doğrudan ve konsolide hava kargo çözümleri.",
         body: "Acil sevkiyatlar, yüksek değerli ürünler ve kısa terminli projelerde en uygun uçuş planını kuruyor, kapıdan kapıya süreci takip ediyoruz.",
-        points: ["Direkt ve transit uçuş planlaması", "Zaman kritik / acil sevkiyat", "Havalimanı ve kapı teslim seçenekleri"],
+        points: [
+          "Direkt ve transit uçuş planlaması",
+          "Zaman kritik / acil sevkiyat",
+          "Havalimanı ve kapı teslim seçenekleri",
+        ],
       },
       {
         id: "multimodal",
         icon: "route",
         title: "Multimodal / Kombine Taşımacılık",
-        short: "Kara, deniz ve hava modlarını birleştirerek süre ve maliyet dengesini optimize ediyoruz.",
+        short:
+          "Kara, deniz ve hava modlarını birleştirerek süre ve maliyet dengesini optimize ediyoruz.",
         body: "Tek bir operasyon planı içinde birden fazla taşıma modunu kurgulayarak rota esnekliği ve maliyet avantajı sağlıyoruz.",
-        points: ["Mod kombinasyonu ve rota optimizasyonu", "Aktarma noktası ve terminal yönetimi", "Tek muhatapla uçtan uca sorumluluk"],
+        points: [
+          "Mod kombinasyonu ve rota optimizasyonu",
+          "Aktarma noktası ve terminal yönetimi",
+          "Tek muhatapla uçtan uca sorumluluk",
+        ],
       },
       {
         id: "proje",
         icon: "crane",
         title: "Proje ve Özel Yük Taşımacılığı",
-        short: "Gabari dışı, ağır tonajlı ve özel ekipman gerektiren yükler için mühendislik odaklı planlama.",
+        short:
+          "Gabari dışı, ağır tonajlı ve özel ekipman gerektiren yükler için mühendislik odaklı planlama.",
         body: "Yükleme etüdü, rota fizibilitesi, izin süreçleri ve saha koordinasyonunu birlikte planlıyor; her adımı raporluyoruz.",
-        points: ["Gabari dışı ve ağır tonaj taşımaları", "Rota etüdü ve izin süreçleri", "Saha ve yükleme koordinasyonu"],
+        points: [
+          "Gabari dışı ve ağır tonaj taşımaları",
+          "Rota etüdü ve izin süreçleri",
+          "Saha ve yükleme koordinasyonu",
+        ],
       },
       {
         id: "parsiyel",
         icon: "boxes",
         title: "Parsiyel ve Komple Taşımalar",
-        short: "Küçük hacimli düzenli sevkiyatlardan komple yüklemelere kadar esnek kapasite yönetimi.",
+        short:
+          "Küçük hacimli düzenli sevkiyatlardan komple yüklemelere kadar esnek kapasite yönetimi.",
         body: "Düzenli konsolidasyon programlarıyla küçük hacimli yüklerde maliyet avantajı, komple yüklerde ise hız ve doğrudan teslim sağlıyoruz.",
-        points: ["Düzenli konsolidasyon programları", "Esnek kapasite ve termin planlaması", "Depo ve konsolidasyon desteği"],
+        points: [
+          "Düzenli konsolidasyon programları",
+          "Esnek kapasite ve termin planlaması",
+          "Depo ve konsolidasyon desteği",
+        ],
       },
     ],
     cta: {
       title: "Yükünüz için hangi model doğru?",
-      subtitle: "Rota ve yük bilgilerinizi paylaşın, en uygun taşıma modelini birlikte belirleyelim.",
+      subtitle:
+        "Rota ve yük bilgilerinizi paylaşın, en uygun taşıma modelini birlikte belirleyelim.",
       button: "Teklif Al",
     },
   },
@@ -207,18 +256,51 @@ export const tr = {
     },
     regionsTitle: "Öne çıkan bölgeler",
     regions: [
-        { id: "europe", name: "Avrupa", text: "Global acente ağı üzerinden karayolu ve kombine taşıma seçenekleri; operasyonlar tek merkezden koordine edilir." },
-        { id: "namerica", name: "Kuzey Amerika", text: "Deniz ve hava taşıma modelleri, yerel iş ortaklarıyla liman ve iç dağıtım koordinasyonu." },
-        { id: "samerica", name: "Güney Amerika", text: "Uluslararası acente ağıyla konteyner operasyonları, alternatif rota geliştirme ve uçtan uca takip." },
-        { id: "fareast", name: "Uzak Doğu", text: "FCL/LCL, konsolidasyon ve hava kargo seçenekleri arasından yüke uygun taşıma modeli geliştirme." },
-        { id: "mideast", name: "Orta Doğu", text: "Karayolu, denizyolu ve kombine seçeneklerle alternatif rota geliştirme ve tek merkezden koordinasyon." },
-        { id: "africa", name: "Afrika", text: "Global acente ağı üzerinden proje yükü ve konteyner sevkiyatlarında liman ve iç bölge koordinasyonu." },
+      {
+        id: "europe",
+        name: "Avrupa",
+        text: "Global acente ağı üzerinden karayolu ve kombine taşıma seçenekleri; operasyonlar tek merkezden koordine edilir.",
+      },
+      {
+        id: "namerica",
+        name: "Kuzey Amerika",
+        text: "Deniz ve hava taşıma modelleri, yerel iş ortaklarıyla liman ve iç dağıtım koordinasyonu.",
+      },
+      {
+        id: "samerica",
+        name: "Güney Amerika",
+        text: "Uluslararası acente ağıyla konteyner operasyonları, alternatif rota geliştirme ve uçtan uca takip.",
+      },
+      {
+        id: "fareast",
+        name: "Uzak Doğu",
+        text: "FCL/LCL, konsolidasyon ve hava kargo seçenekleri arasından yüke uygun taşıma modeli geliştirme.",
+      },
+      {
+        id: "mideast",
+        name: "Orta Doğu",
+        text: "Karayolu, denizyolu ve kombine seçeneklerle alternatif rota geliştirme ve tek merkezden koordinasyon.",
+      },
+      {
+        id: "africa",
+        name: "Afrika",
+        text: "Global acente ağı üzerinden proje yükü ve konteyner sevkiyatlarında liman ve iç bölge koordinasyonu.",
+      },
     ],
     strengthsTitle: "Ağımızı güçlü kılan yaklaşım",
     strengths: [
-        { title: "Global acente ağı", text: "Farklı coğrafyalardaki süreçler uluslararası acente ve iş ortaklığı ağıyla yürütülür." },
-      { title: "Tek muhatap", text: "Farklı ülkelerdeki tüm süreçler tek operasyon sorumlusundan yönetilir." },
-      { title: "Rota alternatifi", text: "Her sevkiyat için birden fazla rota ve mod senaryosu değerlendirilir." },
+      {
+        title: "Global acente ağı",
+        text: "Farklı coğrafyalardaki süreçler uluslararası acente ve iş ortaklığı ağıyla yürütülür.",
+      },
+      {
+        title: "Tek muhatap",
+        text: "Farklı ülkelerdeki tüm süreçler tek operasyon sorumlusundan yönetilir.",
+      },
+      {
+        title: "Rota alternatifi",
+        text: "Her sevkiyat için birden fazla rota ve mod senaryosu değerlendirilir.",
+      },
     ],
   },
   digital: {
@@ -240,28 +322,44 @@ export const tr = {
         icon: "radar",
         title: "Yükleme Takip",
         text: "Sevkiyatın hangi aşamada olduğunu, planlanan ve gerçekleşen tarihleri tek listede görüntüleyebileceğiniz takip yaklaşımı.",
-        points: ["Sevkiyat statü akışı", "Planlanan / gerçekleşen tarih karşılaştırması", "Doküman ve referans erişimi"],
+        points: [
+          "Sevkiyat statü akışı",
+          "Planlanan / gerçekleşen tarih karşılaştırması",
+          "Doküman ve referans erişimi",
+        ],
       },
       {
         id: "finance",
         icon: "wallet",
         title: "Finansal Görüntüleme",
         text: "Sevkiyat bazlı maliyet ve cari görünümün düzenli ve şeffaf biçimde izlenebilmesi için tasarlanan finans modülü.",
-        points: ["Sevkiyat bazlı maliyet görünümü", "Cari ve vade takibi", "Belge bazlı eşleştirme"],
+        points: [
+          "Sevkiyat bazlı maliyet görünümü",
+          "Cari ve vade takibi",
+          "Belge bazlı eşleştirme",
+        ],
       },
       {
         id: "ncts",
         icon: "shield",
         title: "NCTS Operasyon Takibi",
         text: "Transit beyan süreçlerinin durumunu operasyon ekibiyle aynı ekrandan izleyebilmenizi hedefleyen takip kurgusu.",
-        points: ["Transit beyan statüleri", "Süre ve varış kontrol noktaları", "Operasyon ekibiyle ortak görünüm"],
+        points: [
+          "Transit beyan statüleri",
+          "Süre ve varış kontrol noktaları",
+          "Operasyon ekibiyle ortak görünüm",
+        ],
       },
       {
         id: "notifications",
         icon: "bell",
         title: "Otomatik E-posta Bildirimleri",
         text: "Kritik statü değişikliklerinde ilgili kişilere otomatik bilgilendirme gönderen bildirim yapısı.",
-        points: ["Statü bazlı otomatik bildirim", "Kişi ve rol bazlı dağıtım", "Özetlenmiş operasyon bilgisi"],
+        points: [
+          "Statü bazlı otomatik bildirim",
+          "Kişi ve rol bazlı dağıtım",
+          "Özetlenmiş operasyon bilgisi",
+        ],
       },
     ],
     preview: {
@@ -293,12 +391,17 @@ export const tr = {
       items: [
         { label: "Telefon", value: "0212 963 0553" },
         { label: "E-posta", value: "info@ascendlojistik.com" },
-        { label: "Adres", value: "Ataköy 7-8-9-10.Kısım Mah. Çobançeşme E-5 Yanyol Cad. No:20/1 Ataköy Towers A Blok Kat:6 İç Kapı No:109, 34158 Bakırköy/İstanbul" },
+        {
+          label: "Adres",
+          value:
+            "Ataköy 7-8-9-10.Kısım Mah. Çobançeşme E-5 Yanyol Cad. No:20/1 Ataköy Towers A Blok Kat:6 İç Kapı No:109, 34158 Bakırköy/İstanbul",
+        },
       ],
     },
     quoteForm: {
       title: "Teklif Formu",
-      subtitle: "Bilgileri doldurduğunuzda e-posta uygulamanız, talebiniz hazırlanmış olarak açılır; gönderimi siz tamamlarsınız.",
+      subtitle:
+        "Bilgileri doldurduğunuzda e-posta uygulamanız, talebiniz hazırlanmış olarak açılır; gönderimi siz tamamlarsınız.",
       fields: {
         company: "Firma Adı",
         person: "Yetkili Kişi",
@@ -315,7 +418,8 @@ export const tr = {
     },
     contactForm: {
       title: "İletişim Formu",
-      subtitle: "Bilgileri doldurduğunuzda e-posta uygulamanız, mesajınız hazırlanmış olarak açılır; gönderimi siz tamamlarsınız.",
+      subtitle:
+        "Bilgileri doldurduğunuzda e-posta uygulamanız, mesajınız hazırlanmış olarak açılır; gönderimi siz tamamlarsınız.",
       fields: { name: "Ad Soyad", email: "E-posta", subject: "Konu", message: "Mesajınız" },
       submit: "E-posta ile Mesaj Gönder",
     },

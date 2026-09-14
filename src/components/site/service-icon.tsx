@@ -1,4 +1,16 @@
-import { Anchor, Bell, Boxes, ConstructionIcon, Plane, Radar, Route, Shield, Ship, Truck, Wallet } from "lucide-react";
+import {
+  Anchor,
+  Bell,
+  Boxes,
+  ConstructionIcon,
+  Plane,
+  Radar,
+  Route,
+  Shield,
+  Ship,
+  Truck,
+  Wallet,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const icons: Record<string, LucideIcon> = {

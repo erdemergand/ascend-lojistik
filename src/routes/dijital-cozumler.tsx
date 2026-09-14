@@ -41,7 +41,10 @@ function DigitalPage() {
       <Section>
         <div className="grid gap-6 md:grid-cols-2">
           {d.modules.map((m) => (
-            <article key={m.id} className="rounded-xl border border-border bg-card p-8 card-elevated">
+            <article
+              key={m.id}
+              className="rounded-xl border border-border bg-card p-8 card-elevated"
+            >
               <div className="flex items-center gap-4">
                 <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/12">
                   <ServiceIcon name={m.icon} className="h-6 w-6 text-primary" />
@@ -92,7 +95,9 @@ function DigitalPage() {
               <tbody>
                 {d.preview.rows.map((r) => (
                   <tr key={r.ref} className="border-b border-navy-border/60 last:border-0">
-                    <td className="px-5 py-4 font-display font-semibold text-navy-foreground">{r.ref}</td>
+                    <td className="px-5 py-4 font-display font-semibold text-navy-foreground">
+                      {r.ref}
+                    </td>
                     <td className="px-5 py-4 text-navy-foreground/85">{r.route}</td>
                     <td className="px-5 py-4 text-navy-foreground/85">{r.mode}</td>
                     <td className="px-5 py-4">
@@ -108,7 +113,9 @@ function DigitalPage() {
         </div>
         <div className="mt-12">
           <Button asChild size="lg">
-            <Link to="/iletisim" onClick={() => trackLead("digital_contact")}>{c.nav.cta}</Link>
+            <Link to="/iletisim" onClick={() => trackLead("digital_contact")}>
+              {c.nav.cta}
+            </Link>
           </Button>
         </div>
       </Section>

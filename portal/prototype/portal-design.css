@@ -1,0 +1,62 @@
+
+:root{--primary:#302080;--primary-2:#6350b7;--border:#dce1ee;--muted:#657087}
+@media screen{
+body{background:#f2f4fa!important;color:#17243b;font-family:'Segoe UI',Arial,sans-serif!important}
+header,.topbar{border-bottom:1px solid #dddff0!important;background:#fff!important;padding:18px 24px!important;gap:20px;flex-wrap:wrap}
+header img{object-fit:contain;max-height:62px}
+main{max-width:1480px;margin:auto}
+button,.module{transition:background .15s,border-color .15s}
+button{min-height:38px;border-radius:8px!important;font-weight:600}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #806ad0;outline-offset:3px}
+.card,.doc-meta,.summary-card{border:1px solid #dce1ee!important;box-shadow:0 5px 22px #30208006!important;border-radius:12px!important}
+th{background:#eceaf7!important;color:#302080!important;font-size:12px;letter-spacing:.02em}
+td{font-variant-numeric:tabular-nums}
+input,select,textarea{border:1px solid #ccd3e0!important;border-radius:7px!important;background:#fff;color:#17243b;min-height:36px}
+#portalBox>.grid{gap:24px;margin-top:28px}
+.module{padding:42px 28px!important;min-height:190px;border:1px solid #d9d3ee!important;background:#fff!important;display:flex;flex-direction:column;justify-content:flex-end}
+.module strong{font-size:28px;color:#302080}.module span{background:#ffffffdf;max-width:350px;padding:6px 0}
+.portal-report{border:0;border-radius:18px;width:min(1120px,94vw);max-height:90vh;padding:0;color:#17243b;background:#f4f5fa;box-shadow:0 24px 100px #10152b55}
+.portal-report::backdrop{background:#14152c99}.report-head{padding:28px;background:#302080;color:white;display:flex;justify-content:space-between;align-items:center}.report-head h2{color:white;margin:0}.report-head p{color:#e0dbfa}
+.report-content{padding:26px}.report-filters{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px}.report-filters label{display:grid;gap:6px;font-size:13px}.report-panels{display:grid;grid-template-columns:1fr 1fr;gap:24px}.report-panel{background:white;border:1px solid #dce1ee;border-radius:12px;padding:22px}.report-panel h3{margin-top:0}.report-bar{margin:18px 0}.report-bar label{display:flex;justify-content:space-between;gap:10px;font-size:13px}.report-track{height:12px;background:#eceaf7;border-radius:8px;margin-top:7px;overflow:hidden}.report-fill{height:100%;background:#6651bb}.report-panel:nth-child(2) .report-fill{background:#168477}.report-note{font-size:13px;color:#657087;line-height:1.6}
+@media(max-width:700px){.report-panels{grid-template-columns:1fr}.report-content{padding:15px}.topbar>div{flex-wrap:wrap}.module{min-height:150px}header{padding:12px!important}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+}
+@media print{.portal-report,.report-launch{display:none!important}}
+
+@media screen{
+.portal-home main{max-width:1200px;margin:24px auto;padding:24px}
+.portal-home .hero{padding:32px;box-shadow:none;background:#fff;border:1px solid #dce1ee}
+.portal-intro{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;margin-top:30px;padding:32px;background:#f4f2fb;border-radius:14px;align-items:center}
+.portal-intro h2{font-size:36px;line-height:1.15;letter-spacing:-1px;color:#302080;margin:14px 0}
+.portal-intro p{font-size:15px;line-height:1.6;color:#556176;max-width:420px}
+.intro-label{font-size:11px;letter-spacing:2px;font-weight:700;color:#6350b7}
+.portal-map{height:190px;background:url('world-map.svg') center/contain no-repeat;opacity:.38}
+.portal-home .module{justify-content:flex-start;min-height:230px;gap:12px;padding:28px!important;border-top:4px solid #6350b7!important}
+.portal-home .module:nth-child(2){border-top-color:#168477!important}
+.portal-home .module span{background:none;max-width:none;padding:0}
+.portal-home .module .module-tag{font-size:11px;letter-spacing:1.5px;font-weight:700;color:#6350b7}
+.portal-home .module:nth-child(2) .module-tag{color:#126c63}
+.module-action{margin-top:auto;padding-top:22px;color:#302080;font-size:13px}
+.ncts-page main{width:100%;max-width:1440px;padding:24px;box-sizing:border-box}
+.ncts-page header{width:100%;box-sizing:border-box;position:relative}
+.ncts-page .ncts-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.ncts-page .party-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.ncts-page .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ncts-page .field{min-width:0}.ncts-page .field.full{grid-column:1/-1}
+.ncts-page input,.ncts-page select,.ncts-page textarea{width:100%;max-width:100%;box-sizing:border-box}
+.ncts-page .card{min-width:0;padding:20px}.ncts-page .ncts-list-card{overflow-x:auto}
+.ncts-page table{width:100%;border-collapse:collapse}.ncts-page th,.ncts-page td{white-space:normal;overflow-wrap:anywhere}
+.ncts-page .table-wrap{overflow-x:auto}.ncts-page #itemsTable{min-width:850px}
+.ncts-page .toolbar{display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap}
+@media(max-width:1000px){.ncts-page .party-grid{grid-template-columns:1fr}.ncts-page header>div{flex-wrap:wrap}}
+@media(max-width:650px){.portal-home main{padding:12px;margin:0}.portal-home .hero{padding:20px}.portal-intro{grid-template-columns:1fr;padding:22px}.portal-intro h2{font-size:28px}.portal-map{height:100px}.ncts-page main{padding:12px}.ncts-page .form-grid{grid-template-columns:1fr}.ncts-page .doc-meta{grid-template-columns:1fr}}
+}
+
+@media screen{.ncts-page .ncts-list-card table{min-width:1050px;table-layout:auto}.ncts-page .ncts-list-card th{white-space:nowrap}.ncts-page .ncts-list-card td:nth-child(2){white-space:nowrap}.ncts-page .ncts-list-card td:last-child{min-width:125px}}
+
+@media screen{
+.ncts-page header{height:auto!important;min-height:88px!important;display:flex;align-items:center;justify-content:space-between;padding:16px 24px!important;gap:20px}
+.ncts-page header .brand-mark{display:flex;align-items:center;gap:14px;min-width:0}.ncts-page header .brand-mark img{display:block;height:48px;width:auto;max-width:140px;object-fit:contain}
+.ncts-page header>div:last-child{flex-shrink:0;align-self:center}.ncts-page header .muted{line-height:1.4}
+@media(max-width:700px){.ncts-page header>.muted{display:none}.ncts-page header{gap:14px;min-height:80px!important}.ncts-page header .brand-mark{flex:1 1 220px}}
+}

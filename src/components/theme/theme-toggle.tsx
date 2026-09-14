@@ -2,7 +2,11 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme, type ThemePreference } from "@/components/theme/theme-provider";
 
-const options: readonly [{ value: "light"; label: string; icon: typeof Sun }, { value: "dark"; label: string; icon: typeof Sun }, { value: "system"; label: string; icon: typeof Sun }] = [
+const options: readonly [
+  { value: "light"; label: string; icon: typeof Sun },
+  { value: "dark"; label: string; icon: typeof Sun },
+  { value: "system"; label: string; icon: typeof Sun },
+] = [
   { value: "light", label: "Açık tema", icon: Sun },
   { value: "dark", label: "Koyu tema", icon: Moon },
   { value: "system", label: "Sistem teması", icon: Monitor },

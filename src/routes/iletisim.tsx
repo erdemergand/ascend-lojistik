@@ -26,22 +26,25 @@ export const Route = createFileRoute("/iletisim")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: siteUrl }],
-    scripts: [{
-      type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "ContactPage",
-        name: tr.contact.meta.title,
-        url: siteUrl,
-        mainEntity: {
-          "@type": "Organization",
-          name: "ASCEND LOJİSTİK VE GEMİ ACENTE HİZ. DIŞ TİC. LTD. ŞTİ.",
-          telephone: "+90 212 963 05 53",
-          email: "info@ascendlojistik.com",
-          address: "Ataköy 7-8-9-10.Kısım Mah. Çobançeşme E-5 Yanyol Cad. No:20/1 Ataköy Towers A Blok Kat:6 İç Kapı No:109, 34158 Bakırköy/İstanbul",
-        },
-      }),
-    }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          name: tr.contact.meta.title,
+          url: siteUrl,
+          mainEntity: {
+            "@type": "Organization",
+            name: "ASCEND LOJİSTİK VE GEMİ ACENTE HİZ. DIŞ TİC. LTD. ŞTİ.",
+            telephone: "+90 212 963 05 53",
+            email: "info@ascendlojistik.com",
+            address:
+              "Ataköy 7-8-9-10.Kısım Mah. Çobançeşme E-5 Yanyol Cad. No:20/1 Ataköy Towers A Blok Kat:6 İç Kapı No:109, 34158 Bakırköy/İstanbul",
+          },
+        }),
+      },
+    ],
   }),
 });
 
@@ -57,7 +60,8 @@ function ContactPage() {
     const lines = Array.from(form.entries())
       .filter(([, value]) => String(value).trim())
       .map(([key, value]) => `${key}: ${String(value).trim()}`);
-    const formType = e.currentTarget.dataset["formType"] === "quote" ? "Teklif Talebi" : "İletişim Talebi";
+    const formType =
+      e.currentTarget.dataset["formType"] === "quote" ? "Teklif Talebi" : "İletişim Talebi";
     trackLead(e.currentTarget.dataset["formType"] === "quote" ? "quote_mailto" : "contact_mailto");
     window.location.href = `mailto:info@ascendlojistik.com?subject=${encodeURIComponent(`Ascend Lojistik — ${formType}`)}&body=${encodeURIComponent(lines.join("\n"))}`;
   };
@@ -74,7 +78,9 @@ function ContactPage() {
               data-form-type="quote"
               className="rounded-xl border border-border bg-card p-8 card-elevated lg:p-10"
             >
-              <h2 className="font-display text-2xl font-bold text-foreground">{k.quoteForm.title}</h2>
+              <h2 className="font-display text-2xl font-bold text-foreground">
+                {k.quoteForm.title}
+              </h2>
               <p className="mt-2 text-sm text-muted-foreground">{k.quoteForm.subtitle}</p>
 
               <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -115,7 +121,9 @@ function ContactPage() {
               data-form-type="contact"
               className="rounded-xl border border-border bg-card p-8 card-elevated lg:p-10"
             >
-              <h2 className="font-display text-2xl font-bold text-foreground">{k.contactForm.title}</h2>
+              <h2 className="font-display text-2xl font-bold text-foreground">
+                {k.contactForm.title}
+              </h2>
               <p className="mt-2 text-sm text-muted-foreground">{k.contactForm.subtitle}</p>
               <div className="mt-8 grid gap-5 sm:grid-cols-2">
                 <Field id="name" label={k.contactForm.fields.name} required />
@@ -148,10 +156,17 @@ function ContactPage() {
                       <p className="eyebrow text-navy-foreground/75">{item.label}</p>
                       <p className="mt-1.5 break-words text-sm font-medium text-navy-foreground">
                         {item.label === "Telefon" ? (
-                          <a href="tel:+902129630553" onClick={() => trackLead("contact_phone")}>{item.value}</a>
+                          <a href="tel:+902129630553" onClick={() => trackLead("contact_phone")}>
+                            {item.value}
+                          </a>
                         ) : null}
                         {item.label === "E-posta" ? (
-                          <a href="mailto:info@ascendlojistik.com" onClick={() => trackLead("contact_email")}>{item.value}</a>
+                          <a
+                            href="mailto:info@ascendlojistik.com"
+                            onClick={() => trackLead("contact_email")}
+                          >
+                            {item.value}
+                          </a>
                         ) : null}
                         {item.label === "Adres" ? item.value : null}
                       </p>

@@ -36,7 +36,9 @@ function AboutPage() {
       <section className="border-b border-border bg-muted py-8">
         <div className="container-page flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-display text-3xl font-bold text-primary">2022</p>
-          <p className="max-w-2xl text-sm font-semibold text-foreground sm:text-right">Türkiye’den Avrupa, Amerika, Uzak Doğu, Orta Doğu ve Afrika’ya uzanan global erişim.</p>
+          <p className="max-w-2xl text-sm font-semibold text-foreground sm:text-right">
+            Türkiye’den Avrupa, Amerika, Uzak Doğu, Orta Doğu ve Afrika’ya uzanan global erişim.
+          </p>
         </div>
       </section>
 
@@ -52,8 +54,12 @@ function AboutPage() {
           </article>
 
           <aside className="rounded-xl border border-border bg-card p-8 card-elevated">
-            <h3 className="font-display text-xl font-bold text-foreground">{a.story.pillarsTitle}</h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{a.story.pillarsIntro}</p>
+            <h3 className="font-display text-xl font-bold text-foreground">
+              {a.story.pillarsTitle}
+            </h3>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              {a.story.pillarsIntro}
+            </p>
             <ul className="mt-6 space-y-4">
               {a.story.pillars.map((p) => (
                 <li key={p} className="flex gap-3">
@@ -94,7 +100,9 @@ function AboutPage() {
             {c.home.about.quote}
           </p>
           <Button asChild size="lg">
-            <Link to="/iletisim" onClick={() => trackLead("about_quote")}>{c.nav.cta}</Link>
+            <Link to="/iletisim" onClick={() => trackLead("about_quote")}>
+              {c.nav.cta}
+            </Link>
           </Button>
         </div>
       </Section>

@@ -39,7 +39,8 @@ export const Route = createFileRoute("/")({
           email: "info@ascendlojistik.com",
           address: {
             "@type": "PostalAddress",
-            streetAddress: "Ataköy 7-8-9-10.Kısım Mah. Çobançeşme E-5 Yanyol Cad. No:20/1 Ataköy Towers A Blok Kat:6 İç Kapı No:109",
+            streetAddress:
+              "Ataköy 7-8-9-10.Kısım Mah. Çobançeşme E-5 Yanyol Cad. No:20/1 Ataköy Towers A Blok Kat:6 İç Kapı No:109",
             postalCode: "34158",
             addressLocality: "Bakırköy",
             addressRegion: "İstanbul",
@@ -47,7 +48,14 @@ export const Route = createFileRoute("/")({
           },
           foundingDate: "2022",
           description,
-          areaServed: ["Avrupa", "Kuzey Amerika", "Güney Amerika", "Uzak Doğu", "Orta Doğu", "Afrika"],
+          areaServed: [
+            "Avrupa",
+            "Kuzey Amerika",
+            "Güney Amerika",
+            "Uzak Doğu",
+            "Orta Doğu",
+            "Afrika",
+          ],
         }),
       },
     ],
@@ -74,12 +82,12 @@ function HomePage() {
           decoding="async"
           className="absolute inset-0 h-full w-full object-cover opacity-55"
         />
-        <div
-          className="hero-overlay absolute inset-0"
-          aria-hidden="true"
-        />
+        <div className="hero-overlay absolute inset-0" aria-hidden="true" />
         <div className="grid-lines absolute inset-0 opacity-40" aria-hidden="true" />
-        <div className="container-page pointer-events-none absolute inset-x-0 bottom-8 hidden justify-end lg:flex" aria-hidden="true">
+        <div
+          className="container-page pointer-events-none absolute inset-x-0 bottom-8 hidden justify-end lg:flex"
+          aria-hidden="true"
+        >
           <div className="flex items-center gap-5 text-navy-foreground/55">
             <Truck className="h-5 w-5" />
             <span className="h-px w-14 bg-navy-border" />
@@ -102,7 +110,9 @@ function HomePage() {
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Button asChild size="lg" className="h-12 px-7 text-base">
-                <Link to="/iletisim" onClick={() => trackLead("home_hero_quote")}>{h.hero.primaryCta}</Link>
+                <Link to="/iletisim" onClick={() => trackLead("home_hero_quote")}>
+                  {h.hero.primaryCta}
+                </Link>
               </Button>
               <Button
                 asChild
@@ -115,7 +125,10 @@ function HomePage() {
             </div>
             <ul className="mt-14 flex flex-wrap gap-x-8 gap-y-3">
               {h.hero.badges.map((b) => (
-                <li key={b} className="flex items-center gap-2 text-sm font-semibold text-navy-foreground/90">
+                <li
+                  key={b}
+                  className="flex items-center gap-2 text-sm font-semibold text-navy-foreground/90"
+                >
                   <span className="h-1.5 w-1.5 rounded-full bg-navy-foreground" />
                   {b}
                 </li>
@@ -127,7 +140,11 @@ function HomePage() {
 
       {/* 2 — Hizmetler */}
       <Section tone="muted">
-        <SectionHeading eyebrow={h.services.eyebrow} title={h.services.title} subtitle={h.services.subtitle} />
+        <SectionHeading
+          eyebrow={h.services.eyebrow}
+          title={h.services.title}
+          subtitle={h.services.subtitle}
+        />
         <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {c.services.items.map((s) => (
             <Link
@@ -142,7 +159,8 @@ function HomePage() {
               <h3 className="mt-6 font-display text-lg font-bold text-foreground">{s.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.short}</p>
               <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary">
-                Detay <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                Detay{" "}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </span>
             </Link>
           ))}
@@ -169,7 +187,9 @@ function HomePage() {
           ))}
         </div>
         <Button asChild variant="link" className="mt-8 h-auto p-0 text-base">
-          <Link to="/hakkimizda">2022’den bugüne kurumsal profilimiz <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          <Link to="/hakkimizda">
+            2022’den bugüne kurumsal profilimiz <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
         </Button>
       </Section>
 
@@ -189,20 +209,20 @@ function HomePage() {
                   key={r.id}
                   onMouseEnter={() => setActiveRegion(r.id)}
                   onMouseLeave={() => setActiveRegion(null)}
-                   onFocus={() => setActiveRegion(r.id)}
-                   onBlur={() => setActiveRegion(null)}
-                   onClick={() => setActiveRegion(activeRegion === r.id ? null : r.id)}
-                   onKeyDown={(event) => {
-                     if (event.key === "Enter" || event.key === " ") {
-                       event.preventDefault();
-                       setActiveRegion(activeRegion === r.id ? null : r.id);
-                     }
-                   }}
-                   role="button"
-                   aria-pressed={activeRegion === r.id}
-                   aria-label={`${r.name} bölgesini haritada vurgula`}
-                   tabIndex={0}
-                   className="rounded-lg border border-navy-border bg-navy-deep/25 px-4 py-3 text-sm font-semibold text-navy-foreground/90 outline-none transition-colors hover:border-navy-foreground/40 hover:bg-navy-card hover:text-navy-foreground focus-visible:ring-2 focus-visible:ring-navy-foreground"
+                  onFocus={() => setActiveRegion(r.id)}
+                  onBlur={() => setActiveRegion(null)}
+                  onClick={() => setActiveRegion(activeRegion === r.id ? null : r.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setActiveRegion(activeRegion === r.id ? null : r.id);
+                    }
+                  }}
+                  role="button"
+                  aria-pressed={activeRegion === r.id}
+                  aria-label={`${r.name} bölgesini haritada vurgula`}
+                  tabIndex={0}
+                  className="rounded-lg border border-navy-border bg-navy-deep/25 px-4 py-3 text-sm font-semibold text-navy-foreground/90 outline-none transition-colors hover:border-navy-foreground/40 hover:bg-navy-card hover:text-navy-foreground focus-visible:ring-2 focus-visible:ring-navy-foreground"
                 >
                   {r.name}
                 </li>
@@ -233,12 +253,19 @@ function HomePage() {
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-primary/15">
                 <ServiceIcon name={m.icon} className="h-5 w-5 text-navy-foreground" />
               </span>
-              <h3 className="mt-6 font-display text-base font-bold text-navy-foreground">{m.title}</h3>
+              <h3 className="mt-6 font-display text-base font-bold text-navy-foreground">
+                {m.title}
+              </h3>
               <p className="mt-3 text-sm leading-relaxed text-navy-foreground/85">{m.text}</p>
             </article>
           ))}
         </div>
-        <Button asChild size="lg" variant="outline" className="mt-12 border-navy-border bg-transparent text-navy-foreground hover:bg-navy-card hover:text-navy-foreground">
+        <Button
+          asChild
+          size="lg"
+          variant="outline"
+          className="mt-12 border-navy-border bg-transparent text-navy-foreground hover:bg-navy-card hover:text-navy-foreground"
+        >
           <Link to="/dijital-cozumler">{h.digital.cta}</Link>
         </Button>
       </Section>
@@ -256,10 +283,14 @@ function HomePage() {
             </p>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <Button asChild size="lg" className="h-12 px-7 text-base">
-                <Link to="/iletisim" onClick={() => trackLead("home_final_quote")}>{h.quote.primaryCta}</Link>
+                <Link to="/iletisim" onClick={() => trackLead("home_final_quote")}>
+                  {h.quote.primaryCta}
+                </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base">
-                <Link to="/iletisim" onClick={() => trackLead("home_final_contact")}>{h.quote.secondaryCta}</Link>
+                <Link to="/iletisim" onClick={() => trackLead("home_final_contact")}>
+                  {h.quote.secondaryCta}
+                </Link>
               </Button>
             </div>
           </div>

@@ -23,18 +23,20 @@ export const Route = createFileRoute("/hizmetlerimiz")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: siteUrl }],
-    scripts: [{
-      type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@graph": tr.services.items.map((item) => ({
-          "@type": "Service",
-          name: item.title,
-          description: item.short,
-          provider: { "@type": "Organization", name: "Ascend Lojistik" },
-        })),
-      }),
-    }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": tr.services.items.map((item) => ({
+            "@type": "Service",
+            name: item.title,
+            description: item.short,
+            provider: { "@type": "Organization", name: "Ascend Lojistik" },
+          })),
+        }),
+      },
+    ],
   }),
 });
 
@@ -52,14 +54,16 @@ function ServicesPage() {
             <a
               key={item.id}
               href={`#${item.id}`}
-               className="group flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 card-elevated"
+              className="group flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 card-elevated"
             >
-               <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/12">
+              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/12">
                 <ServiceIcon name={item.icon} className="h-6 w-6 text-primary" />
               </span>
-               <span className="min-w-0 flex-1 font-display text-base font-bold text-foreground">{item.title}</span>
-               <span className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-primary">
-                 İncele
+              <span className="min-w-0 flex-1 font-display text-base font-bold text-foreground">
+                {item.title}
+              </span>
+              <span className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-primary">
+                İncele
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </span>
             </a>
@@ -77,7 +81,9 @@ function ServicesPage() {
             >
               <div>
                 <p className="eyebrow text-primary">{String(i + 1).padStart(2, "0")}</p>
-                <h2 className="mt-4 text-2xl font-bold text-foreground lg:text-3xl">{item.title}</h2>
+                <h2 className="mt-4 text-2xl font-bold text-foreground lg:text-3xl">
+                  {item.title}
+                </h2>
                 <p className="mt-4 text-base leading-relaxed text-muted-foreground">{item.body}</p>
               </div>
               <ul className="grid content-start gap-4 border-border lg:border-l lg:pl-10">
@@ -97,7 +103,9 @@ function ServicesPage() {
         <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           <SectionHeading tone="navy" title={s.cta.title} subtitle={s.cta.subtitle} />
           <Button asChild size="lg" className="shrink-0">
-            <Link to="/iletisim" onClick={() => trackLead("services_quote")}>{s.cta.button}</Link>
+            <Link to="/iletisim" onClick={() => trackLead("services_quote")}>
+              {s.cta.button}
+            </Link>
           </Button>
         </div>
       </Section>

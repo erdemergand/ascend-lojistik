@@ -128,14 +128,22 @@ export function WorldMap({
               className="text-navy-foreground/25 transition-all duration-300"
               style={{ animation: `ascend-pulse-dot ${3 + i * 0.4}s ease-in-out infinite` }}
             />
-            <circle cx={r.x} cy={r.y} r="4.5" fill="currentColor" className="text-navy-foreground" />
+            <circle
+              cx={r.x}
+              cy={r.y}
+              r="4.5"
+              fill="currentColor"
+              className="text-navy-foreground"
+            />
             <text
               x={r.x}
               y={r.y - 22}
               textAnchor="middle"
               className={cn(
                 "font-display text-[13px] font-semibold transition-colors",
-                active ? "fill-current text-navy-foreground" : "fill-current text-navy-foreground/90",
+                active
+                  ? "fill-current text-navy-foreground"
+                  : "fill-current text-navy-foreground/90",
               )}
               fill="currentColor"
             >

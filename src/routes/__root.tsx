@@ -119,10 +119,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-47EHL67FSH"
-        />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-47EHL67FSH" />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', 'G-47EHL67FSH');`,

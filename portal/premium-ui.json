@@ -1,0 +1,12 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": [
+    "prototype"
+  ],
+  "locale": "tr-TR",
+  "canonicalMap": "DESIGN.md",
+  "ownership": {
+    "Select/Listbox": "native",
+    "Date": "native"
+  }
+}
