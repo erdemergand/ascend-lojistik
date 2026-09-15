@@ -1,17 +1,17 @@
-(() => {
- const state=window.portalBootstrap;
- if(!state)return;
- const nativeStorage=window['local'+'Storage'];
- const values={ascend_users:state.users,ascend_companies:state.companies,ascend_shipments:state.shipments,ascend_ncts_records:state.ncts};
- const cache=Object.fromEntries(Object.entries(values).map(([k,v])=>[k,JSON.stringify(v)]));
- const session={ascend_session:JSON.stringify(state.user),ascend_logistics_demo_customer:JSON.stringify(state.shipments),ascend_logistics_demo_staff:JSON.stringify(state.shipments),ascend_logistics_demo_companies:JSON.stringify(state.companies),ascend_ncts_role_demo:JSON.stringify(state.ncts)};
- const mapping={ascend_users:'users',ascend_companies:'companies',ascend_shipments:'shipments',ascend_ncts_records:'ncts',ascend_logistics_demo_staff:'shipments',ascend_logistics_demo_companies:'companies',ascend_ncts_role_demo:'ncts'};
- let queue=Promise.resolve(),revision=state.revision,conflicted=false;
- function status(text){let note=document.getElementById('serverSaveStatus');if(!note){note=document.createElement('p');note.id='serverSaveStatus';note.setAttribute('role','status');note.className='no-print';document.body.append(note);}note.textContent=text;}
- function save(key,value){if(!mapping[key])return;if(['Görüntüleme','Müşteri'].includes(state.user.role))return;
- queue=queue.then(async()=>{if(conflicted)throw Error('Kayıt çakışması var. Girdiğiniz verileri koruyup sayfayı yenileyin.');const res=await fetch('/api/tenant/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_revision:revision,[mapping[key]]:JSON.parse(value)})});const result=await res.json();if(!res.ok){if(res.status===409)conflicted=true;throw Error(result.error||'Sunucu kaydı tamamlanamadı.');}revision=result.revision;status('Sunucuya kaydedildi.');}).catch(e=>status(e.message));}
- window.portalLocal={getItem:k=>k==='ascend-portal-theme'?nativeStorage.getItem(k):cache[k]??null,setItem(k,v){if(k==='ascend-portal-theme'){nativeStorage.setItem(k,v);return;}if(cache[k]===String(v))return;cache[k]=String(v);save(k,v);},removeItem:k=>delete cache[k]};
- window.portalSession={getItem:k=>session[k]??null,setItem(k,v){if(session[k]===String(v))return;session[k]=String(v);save(k,v);},removeItem:k=>delete session[k]};
- window.portalSavePending=()=>queue;
- window.addEventListener('DOMContentLoaded',()=>{const link=document.createElement('a');link.href='control-center.html';link.className='secondary no-print';link.textContent='Evrak ve Hesap Merkezi';(document.querySelector('header')||document.querySelector('.topbar')||document.body).append(link);if(!['Müşteri','Görüntüleme'].includes(state.user.role)){const quote=document.createElement('a');quote.href='quote-center.html';quote.className='secondary no-print';quote.textContent='Hızlı Fiyat Al';(document.querySelector('header')||document.querySelector('.topbar')||document.body).append(quote);}for(const b of document.querySelectorAll('button'))if(/^Çıkış(?: Yap)?$/.test(b.textContent.trim()))b.onclick=async()=>{await queue;await fetch('/api/tenant/logout',{method:'POST'});location.href='index.html';};});
-})();
+(() => {
+ const state=window.portalBootstrap;
+ if(!state)return;
+ const nativeStorage=window['local'+'Storage'];
+ const values={ascend_users:state.users,ascend_companies:state.companies,ascend_shipments:state.shipments,ascend_ncts_records:state.ncts};
+ const cache=Object.fromEntries(Object.entries(values).map(([k,v])=>[k,JSON.stringify(v)]));
+ const session={ascend_session:JSON.stringify(state.user),ascend_logistics_demo_customer:JSON.stringify(state.shipments),ascend_logistics_demo_staff:JSON.stringify(state.shipments),ascend_logistics_demo_companies:JSON.stringify(state.companies),ascend_ncts_role_demo:JSON.stringify(state.ncts)};
+ const mapping={ascend_users:'users',ascend_companies:'companies',ascend_shipments:'shipments',ascend_ncts_records:'ncts',ascend_logistics_demo_staff:'shipments',ascend_logistics_demo_companies:'companies',ascend_ncts_role_demo:'ncts'};
+ let queue=Promise.resolve(),revision=state.revision,conflicted=false;
+ function status(text){let note=document.getElementById('serverSaveStatus');if(!note){note=document.createElement('p');note.id='serverSaveStatus';note.setAttribute('role','status');note.className='no-print';document.body.append(note);}note.textContent=text;}
+ function save(key,value){if(!mapping[key])return;if(['Görüntüleme','Müşteri'].includes(state.user.role))return;
+ queue=queue.then(async()=>{if(conflicted)throw Error('Kayıt çakışması var. Girdiğiniz verileri koruyup sayfayı yenileyin.');const res=await fetch('/api/tenant/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_revision:revision,[mapping[key]]:JSON.parse(value)})});const result=await res.json();if(!res.ok){if(res.status===409)conflicted=true;throw Error(result.error||'Sunucu kaydı tamamlanamadı.');}revision=result.revision;status('Sunucuya kaydedildi.');}).catch(e=>status(e.message));}
+ window.portalLocal={getItem:k=>k==='ascend-portal-theme'?nativeStorage.getItem(k):cache[k]??null,setItem(k,v){if(k==='ascend-portal-theme'){nativeStorage.setItem(k,v);return;}if(cache[k]===String(v))return;cache[k]=String(v);save(k,v);},removeItem:k=>delete cache[k]};
+ window.portalSession={getItem:k=>session[k]??null,setItem(k,v){if(session[k]===String(v))return;session[k]=String(v);save(k,v);},removeItem:k=>delete session[k]};
+ window.portalSavePending=()=>queue;
+ window.addEventListener('DOMContentLoaded',()=>{const link=document.createElement('a');link.href='control-center.html';link.className='secondary no-print';link.textContent='Evrak ve Hesap Merkezi';(document.querySelector('header')||document.querySelector('.topbar')||document.body).append(link);if(!['Müşteri','Görüntüleme'].includes(state.user.role)){const quote=document.createElement('a');quote.href='quote-center.html';quote.className='secondary no-print';quote.textContent='Hızlı Fiyat Al';(document.querySelector('header')||document.querySelector('.topbar')||document.body).append(quote);}if(state.user.role==='Yönetici'){const offers=document.createElement('a');offers.href='offer-center.html';offers.className='secondary no-print';offers.textContent='Teklif Yönetimi';(document.querySelector('header')||document.body).append(offers);}for(const b of document.querySelectorAll('button'))if(/^Çıkış(?: Yap)?$/.test(b.textContent.trim()))b.onclick=async()=>{await queue;await fetch('/api/tenant/logout',{method:'POST'});location.href='index.html';};});
+})();
