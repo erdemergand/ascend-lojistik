@@ -25,3 +25,5 @@ Runtime source: src/styles.css color and typography tokens, adapted by portal-th
 Country/activity report panels use shipment country and actual carrier associations. Carrier cards carry serviceCountries and per-contact transportMode; quote matching never exposes carriers to customers. Each carrier receives a separate administrator-reviewed draft. Quote fields are required both in UI and server validation. Native select/date ownership applies to the new centers. All table body/cell backgrounds are theme tokens in dark mode, including finance and NCTS.
 
 Teklif Yönetimi: administrator-only offer API and UI; native selects/dates, shared theme. Purchase offers remain internal. Customer mail starts from sale-only template, explicit review queues one message per offer version. Failed saves preserve inputs; stale revisions return 409.
+
+Offer workflow displays original unpriced request, separate carrier inquiry previews, received carrier prices, then customer sale mail. Sale price is nullable until decided; no customer mail can queue without a saved sale price.
