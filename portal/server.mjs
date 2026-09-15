@@ -50,6 +50,9 @@ const digest = (value) => createHash('sha256').update(value).digest();
 
 export async function createPortalServer(env = process.env) {
   const preview = env.PORTAL_PREVIEW_ENABLED === 'true';
+  const publicOrigin=env.PORTAL_PUBLIC_ORIGIN||'';
+  if(publicOrigin){const url=new URL(publicOrigin);if(url.protocol!=='https:'||url.origin!==publicOrigin)throw Error('PORTAL_PUBLIC_ORIGIN must be an HTTPS origin without a path.');}
+  const secureCookie=publicOrigin?'; Secure':'';
   const username = env.PORTAL_PREVIEW_USER ?? '';
   const password = env.PORTAL_PREVIEW_PASSWORD ?? '';
   if (preview && (!username || username.includes(':') || password.length < 24)) {
@@ -68,6 +71,7 @@ export async function createPortalServer(env = process.env) {
   const expected = digest(`Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`);
   const server=createServer(async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
+    if(publicOrigin)res.setHeader('Strict-Transport-Security','max-age=31536000');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('Referrer-Policy', 'no-referrer');
@@ -105,12 +109,12 @@ export async function createPortalServer(env = process.env) {
     if(pathname.startsWith('/api/tenant/')){
       const json=(status,data)=>send(status,JSON.stringify(data),'application/json; charset=utf-8');
       try{
-        if(req.method==='POST' && (req.headers['sec-fetch-site']==='cross-site'||(req.headers.origin&&req.headers.origin!== 'http://'+req.headers.host)))return json(403,{error:'Origin denied'});
+        if(req.method==='POST' && (req.headers['sec-fetch-site']==='cross-site'||(req.headers.origin&&req.headers.origin!== (publicOrigin||'http://'+req.headers.host))))return json(403,{error:'Origin denied'});
         let body={};if(req.method==='POST'){let raw='';for await(const chunk of req){raw+=chunk;if(raw.length>5000000)return json(413,{error:'Too large'});}body=JSON.parse(raw||'{}');}
-        if(pathname==='/api/tenant/login'&&req.method==='POST'){const result=tenants.login(String(body.username||''),String(body.password||''),String(body.code||''));if(!result)return json(401,{error:'Kullanıcı adı veya şifre hatalı.'});res.setHeader('Set-Cookie','ascend_sid='+result.token+'; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800');return json(200,result.user);}
+        if(pathname==='/api/tenant/login'&&req.method==='POST'){const result=tenants.login(String(body.username||''),String(body.password||''),String(body.code||''));if(!result)return json(401,{error:'Kullanıcı adı veya şifre hatalı.'});res.setHeader('Set-Cookie','ascend_sid='+result.token+'; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800'+secureCookie);return json(200,result.user);}
         if(pathname==='/api/tenant/security/reset-complete'&&req.method==='POST')return json(200,await tenants.security('reset-complete',null,body));
         if(!principal)return json(401,{error:'Giriş gerekli'});
-        if(pathname==='/api/tenant/logout'&&req.method==='POST'){tenants.logout(req);res.setHeader('Set-Cookie','ascend_sid=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0');return json(200,{});}
+        if(pathname==='/api/tenant/logout'&&req.method==='POST'){tenants.logout(req);res.setHeader('Set-Cookie','ascend_sid=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'+secureCookie);return json(200,{});}
         if(pathname==='/api/tenant/data'&&req.method==='GET')return json(200,tenants.data(principal));
         if(pathname==='/api/tenant/sync'&&req.method==='POST'){if(!Number.isInteger(body._revision))return json(409,{error:'Sayfayı yenileyin: kayıt sürümü gerekli.'});await tenants.sync(principal,body);return json(200,{revision:tenants.revision()});}
         if(pathname.startsWith('/api/tenant/security/')&&req.method==='POST')return json(200,await tenants.security(pathname.split('/').pop(),principal,body));

@@ -48,3 +48,6 @@ test('only allowlisted files are served; unknown write/API endpoints are rejecte
   assert.equal(head.status, 200);
   assert.equal(await head.text(), '');
 });
+
+ test('HTTPS origin accepts proxy requests and issues Secure session cookies',async t=>{const base=await start(t,{...credentials,PORTAL_PUBLIC_ORIGIN:'https://portal.example.com'});const response=await fetch(base+'/api/tenant/login',{method:'POST',headers:{authorization,Origin:'https://portal.example.com','Content-Type':'application/json'},body:JSON.stringify({username:'yonetici.demo',password:'AscendDemo!2026'})});assert.equal(response.status,200);assert.match(response.headers.get('set-cookie'),/; Secure/);assert.match(response.headers.get('strict-transport-security'),/max-age/);const denied=await fetch(base+'/api/tenant/login',{method:'POST',headers:{authorization,Origin:'https://evil.example','Content-Type':'application/json'},body:'{}'});assert.equal(denied.status,403);});
+ test('non-HTTPS public origin fails closed',async()=>{await assert.rejects(createPortalServer({...credentials,PORTAL_PUBLIC_ORIGIN:'http://portal.example.com'}),/HTTPS origin/);});

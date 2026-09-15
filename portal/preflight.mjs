@@ -1,0 +1,13 @@
+import {DatabaseSync} from 'node:sqlite';
+import {existsSync} from 'node:fs';
+const env=process.env,checks=[];
+const check=(name,ok)=>checks.push({name,ok:!!ok});
+check('HTTPS portal adresi',/^https:\/\/[^/]+$/.test(env.PORTAL_PUBLIC_ORIGIN||''));
+check('Kalıcı veri yolu',!!env.PORTAL_DATA_FILE);
+check('SMTP gönderimi etkin',env.PORTAL_MAIL_ENABLED==='true');
+check('SMTP ayarları',env.SMTP_HOST&&env.SMTP_USER&&env.SMTP_PASSWORD&&env.SMTP_FROM&&['465','587'].includes(env.SMTP_PORT));
+check('Site teklif bağlantısı etkin',env.PORTAL_PUBLIC_QUOTES==='true'&&env.PORTAL_QUOTE_ORIGIN==='https://www.ascendlojistik.com');
+const file=env.PORTAL_DATA_FILE?.replace(/\.json$/i,'')+'.sqlite';
+if(env.PORTAL_DATA_FILE&&existsSync(file)){const db=new DatabaseSync(file,{readOnly:true});try{const state=JSON.parse(db.prepare('SELECT body FROM state WHERE id=1').get()?.body||'{}');check('Etkin demo hesabı yok',!(state.users||[]).some(u=>u.active&&(u.username==='demo'||u.username.endsWith('.demo'))));check('Gerçek yönetici ve iki aşamalı doğrulama',(state.users||[]).some(u=>u.active&&u.role==='Yönetici'&&u.username==='ascend lojistik'&&u.totpSecret));check('Veritabanı bütünlüğü',db.prepare('PRAGMA integrity_check').get().integrity_check==='ok');}finally{db.close();}}else check('Kalıcı veritabanı mevcut',false);
+for(const c of checks)console.log((c.ok?'OK':'EKSİK')+' — '+c.name);
+console.log('Bu kontrol yayın yapmaz. DNS/SSL, bağımsız yedek geri yükleme, SMTP teslimi, PDF içeriği ve rol kabul testleri ayrıca doğrulanmalıdır.');process.exitCode=checks.every(c=>c.ok)?0:1;
