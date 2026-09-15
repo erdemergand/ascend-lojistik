@@ -688,7 +688,7 @@ function contactTemplate(c={},prefix='c'){
   <div class="field"><label>Soyad</label><input class="${prefix}Last" value="${c.last||''}"></div>
   <div class="field"><label>Pozisyon</label><select class="${prefix}Position">${posOptions.map(x=>`<option ${x===(c.position||'')?'selected':''}>${x}</option>`).join('')}</select></div>
   <div class="field"><label>Birim / Departman</label><select class="${prefix}Department">${deptOptions.map(x=>`<option ${x===(c.department||'')?'selected':''}>${x}</option>`).join('')}</select></div>
-  <div class="field"><label>Taşıma Birimi</label><select class="${prefix}TransportMode">${['Genel','Hava','Kara','Deniz','Demiryolu'].map(mode=>`<option ${mode===c.transportMode?'selected':''}>${mode}</option>`).join('')}</select></div><div class="field"><label>Telefon</label><input class="${prefix}Phone" value="${c.phone||''}"></div>
+  <fieldset class="field"><legend>Sorumlu olduğu taşıma türleri</legend><small>Bir veya birden fazla seçim yapabilirsiniz.</small><div style="display:flex;gap:12px;flex-wrap:wrap">${['Kara','Hava','Deniz','Demiryolu'].map(mode=>`<label style="display:flex;align-items:center;gap:6px"><input type="checkbox" class="${prefix}TransportMode" value="${mode}" ${(c.transportModes||[c.transportMode]).includes(mode)?'checked':''}>${mode}</label>`).join('')}</div></fieldset><div class="field"><label>Telefon</label><input class="${prefix}Phone" value="${c.phone||''}"></div>
   <div class="field"><label>E-posta</label><input type="email" class="${prefix}Email" value="${c.email||''}"></div>
  </div>
  <div class="notify-pref">
@@ -706,7 +706,7 @@ function collectContacts(container,prefix){
   first:card.querySelector('.'+prefix+'First')?.value.trim()||'',
   last:card.querySelector('.'+prefix+'Last')?.value.trim()||'',
   position:card.querySelector('.'+prefix+'Position')?.value||'',
-  department:card.querySelector('.'+prefix+'Department')?.value||'',transportMode:card.querySelector('.'+prefix+'TransportMode')?.value||'Genel',
+  department:card.querySelector('.'+prefix+'Department')?.value||'',transportModes:Array.from(card.querySelectorAll('.'+prefix+'TransportMode:checked')).map(input=>input.value),
   phone:card.querySelector('.'+prefix+'Phone')?.value.trim()||'',
   email:card.querySelector('.'+prefix+'Email')?.value.trim()||'',
   notifyDeparture:!!card.querySelector('.'+prefix+'NotifyDeparture')?.checked,
@@ -732,7 +732,7 @@ function editCompany(i){
 function saveCompany(){
  if(logisticsReadOnly())return;
  const c={...(companies[companyEditIndex]||{}),id:companies[companyEditIndex]?.id||companies[companyEditIndex]?.name||crypto.randomUUID(),name:cName.value.trim(),location:cLocation.value,country:cCountry.value,taxOffice:cTaxOffice.value,taxNo:cTaxNo.value,address:cAddress.value,contacts:collectContacts(companyContacts,'c'),notes:cNotes.value};
- c.shortName=cShortName.value.trim();c.isCarrier=cIsCarrier.checked;c.serviceCountries=[...new Set(cServiceCountries.value.split(',').map(x=>x.trim()).filter(Boolean))];if(c.isCarrier&&(!c.serviceCountries.length||!c.contacts.some(x=>['Hava','Kara','Deniz','Demiryolu'].includes(x.transportMode)&&/^\S+@\S+\.\S+$/.test(x.email)))){alert('Acente için hizmet ülkesi ve hava/kara/deniz/demiryolu biriminde geçerli e-posta adresli temsilci zorunludur.');return;}
+ c.shortName=cShortName.value.trim();c.isCarrier=cIsCarrier.checked;c.serviceCountries=[...new Set(cServiceCountries.value.split(',').map(x=>x.trim()).filter(Boolean))];if(c.isCarrier&&(!c.serviceCountries.length||!c.contacts.some(x=>(x.transportModes||[x.transportMode]).some(mode=>['Hava','Kara','Deniz','Demiryolu'].includes(mode))&&/^\S+@\S+\.\S+$/.test(x.email)))){alert('Acente için hizmet ülkesi ve hava/kara/deniz/demiryolu biriminde geçerli e-posta adresli temsilci zorunludur.');return;}
  if(!c.name) return alert('Firma ünvanı zorunludur.');
  if(companyEditIndex===null){ if(findCompany(c.name)) return alert('Bu firma zaten kayıtlı.'); companies.push(c); }
  else companies[companyEditIndex]=c;

@@ -27,3 +27,5 @@ Country/activity report panels use shipment country and actual carrier associati
 Teklif Yönetimi: administrator-only offer API and UI; native selects/dates, shared theme. Purchase offers remain internal. Customer mail starts from sale-only template, explicit review queues one message per offer version. Failed saves preserve inputs; stale revisions return 409.
 
 Offer workflow displays original unpriced request, separate carrier inquiry previews, received carrier prices, then customer sale mail. Sale price is nullable until decided; no customer mail can queue without a saved sale price.
+
+Carrier contact transportModes uses a native checkbox group with explicit selections; no selection means no quote matching. Legacy transportMode is read only when the array is absent. Customer privacy rules remain unchanged.
