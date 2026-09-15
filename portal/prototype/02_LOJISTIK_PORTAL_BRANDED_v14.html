@@ -282,7 +282,7 @@ table{border-radius:8px;overflow:hidden}th{background:#eef3f6;color:#302080;text
   </div>
   <div id="companyContacts"></div>
 </div>
-<div class="field full"><label>Not</label><textarea class="resize-none" id="cNotes"></textarea></div>
+<div class="field full"><label><input id="cIsCarrier" type="checkbox"> Acente / Taşıyıcı hizmeti verir</label><label for="cServiceCountries">Hizmet verilen ülkeler (virgülle)</label><input id="cServiceCountries" placeholder="Almanya, Fransa, Türkiye"><small>Teklifler bu ülkeler ve temsilcinin taşıma birimi üzerinden eşleştirilir.</small></div><div class="field full"><label>Not</label><textarea class="resize-none" id="cNotes"></textarea></div>
 </div>
 <div class="actions no-print"><button class="primary" onclick="saveCompany()">Firma Kartını Kaydet</button></div>
 </div>
@@ -534,7 +534,7 @@ table{border-radius:8px;overflow:hidden}th{background:#eef3f6;color:#302080;text
     </div>
     <div class="mail-grid">
       <div class="field"><label>Kime</label><input id="mailTo"></div>
-      <div class="field"><label>CC</label><input id="mailCc"></div>
+      <div class="field"><label>CC</label><input id="mailCc"></div><div class="field"><label>Ek alıcılar (virgülle)</label><input id="mailExtra" type="text"></div>
       <div class="field full"><label>Konu</label><input id="mailSubject"></div>
       <div class="field full"><label>Mesaj</label><textarea class="resize-none" id="mailBody"></textarea></div>
       <div class="field full"><label>Ek</label><input id="mailAttachment" disabled></div>
@@ -688,7 +688,7 @@ function contactTemplate(c={},prefix='c'){
   <div class="field"><label>Soyad</label><input class="${prefix}Last" value="${c.last||''}"></div>
   <div class="field"><label>Pozisyon</label><select class="${prefix}Position">${posOptions.map(x=>`<option ${x===(c.position||'')?'selected':''}>${x}</option>`).join('')}</select></div>
   <div class="field"><label>Birim / Departman</label><select class="${prefix}Department">${deptOptions.map(x=>`<option ${x===(c.department||'')?'selected':''}>${x}</option>`).join('')}</select></div>
-  <div class="field"><label>Telefon</label><input class="${prefix}Phone" value="${c.phone||''}"></div>
+  <div class="field"><label>Taşıma Birimi</label><select class="${prefix}TransportMode">${['Genel','Hava','Kara','Deniz','Demiryolu'].map(mode=>`<option ${mode===c.transportMode?'selected':''}>${mode}</option>`).join('')}</select></div><div class="field"><label>Telefon</label><input class="${prefix}Phone" value="${c.phone||''}"></div>
   <div class="field"><label>E-posta</label><input type="email" class="${prefix}Email" value="${c.email||''}"></div>
  </div>
  <div class="notify-pref">
@@ -706,7 +706,7 @@ function collectContacts(container,prefix){
   first:card.querySelector('.'+prefix+'First')?.value.trim()||'',
   last:card.querySelector('.'+prefix+'Last')?.value.trim()||'',
   position:card.querySelector('.'+prefix+'Position')?.value||'',
-  department:card.querySelector('.'+prefix+'Department')?.value||'',
+  department:card.querySelector('.'+prefix+'Department')?.value||'',transportMode:card.querySelector('.'+prefix+'TransportMode')?.value||'Genel',
   phone:card.querySelector('.'+prefix+'Phone')?.value.trim()||'',
   email:card.querySelector('.'+prefix+'Email')?.value.trim()||'',
   notifyDeparture:!!card.querySelector('.'+prefix+'NotifyDeparture')?.checked,
@@ -719,20 +719,20 @@ function openCompanies(){renderCompanies();show('companies');}
 function newCompany(){
  companyEditIndex=null;companyEditTitle.textContent='Yeni Firma Kartı';
  ['cName','cShortName','cCountry','cTaxOffice','cTaxNo','cAddress','cNotes'].forEach(id=>document.getElementById(id).value='');companyContacts.innerHTML='';addCompanyContact();
- cLocation.value='Yurtiçi';cCountry.value='Türkiye';show('companyEdit');
+ cIsCarrier.checked=false;cServiceCountries.value='';cLocation.value='Yurtiçi';cCountry.value='Türkiye';show('companyEdit');
 }
 function editCompany(i){
  companyEditIndex=i;const c=companies[i];companyEditTitle.textContent='Firma Kartını Düzenle';
  cName.value=c.name||'';cLocation.value=c.location||'Yurtiçi';cCountry.value=c.country||'';
- cShortName.value=c.shortName||'';
+ cShortName.value=c.shortName||'';cIsCarrier.checked=!!c.isCarrier;cServiceCountries.value=(c.serviceCountries||[]).join(', ');
  cTaxOffice.value=c.taxOffice||'';cTaxNo.value=c.taxNo||'';cAddress.value=c.address||'';cNotes.value=c.notes||'';
  companyContacts.innerHTML='';const cs=(c.contacts&&c.contacts.length)?c.contacts:[{first:c.contactFirst||'',last:c.contactLast||'',phone:c.phone||'',email:c.email||'',position:'Diğer',department:'Diğer'}];
  cs.forEach(x=>addCompanyContact(x));show('companyEdit');
 }
 function saveCompany(){
  if(logisticsReadOnly())return;
- const c={name:cName.value.trim(),location:cLocation.value,country:cCountry.value,taxOffice:cTaxOffice.value,taxNo:cTaxNo.value,address:cAddress.value,contacts:collectContacts(companyContacts,'c'),notes:cNotes.value};
- c.shortName=cShortName.value.trim();
+ const c={...(companies[companyEditIndex]||{}),id:companies[companyEditIndex]?.id||companies[companyEditIndex]?.name||crypto.randomUUID(),name:cName.value.trim(),location:cLocation.value,country:cCountry.value,taxOffice:cTaxOffice.value,taxNo:cTaxNo.value,address:cAddress.value,contacts:collectContacts(companyContacts,'c'),notes:cNotes.value};
+ c.shortName=cShortName.value.trim();c.isCarrier=cIsCarrier.checked;c.serviceCountries=[...new Set(cServiceCountries.value.split(',').map(x=>x.trim()).filter(Boolean))];if(c.isCarrier&&(!c.serviceCountries.length||!c.contacts.some(x=>['Hava','Kara','Deniz','Demiryolu'].includes(x.transportMode)&&/^\S+@\S+\.\S+$/.test(x.email)))){alert('Acente için hizmet ülkesi ve hava/kara/deniz/demiryolu biriminde geçerli e-posta adresli temsilci zorunludur.');return;}
  if(!c.name) return alert('Firma ünvanı zorunludur.');
  if(companyEditIndex===null){ if(findCompany(c.name)) return alert('Bu firma zaten kayıtlı.'); companies.push(c); }
  else companies[companyEditIndex]=c;
@@ -832,22 +832,24 @@ let mailContext={shipmentIndex:null,type:null};
 function companyContactsFor(name,type){
  const c=findCompany(name); if(!c) return [];
  const key=type==='Çıkış Bildirimi'?'notifyDeparture':(type==='Varış Bildirimi'?'notifyArrival':'notifyFinance');
- return (c.contacts||[]).filter(x=>x.email && x[key]);
+ return [...new Map((c.contacts||[]).filter(x=>x.email&&x[key]!==false).map(x=>[x.email.trim().toLowerCase(),{...x,email:x.email.trim()}])).values()];
 }
 function buildRecipients(r,type){
- const contacts=companyContactsFor(r.consignee,type);
+ const contacts=companyContactsFor(r.direction==='İhracat'?r.shipper:r.consignee,type);
  return {
    to: contacts.slice(0,1).map(x=>x.email),
    cc: contacts.slice(1).map(x=>x.email)
  };
 }
-function openMailModal(i,type){
+async function openMailModal(i,type){
  const r=rows[i]; mailContext={shipmentIndex:i,type};
- const rec=buildRecipients(r,type);
+ let rec=buildRecipients(r,type);
+ if(window.portalBootstrap){try{if(window.portalSavePending)await window.portalSavePending();const response=await fetch('/api/tenant/recipients?module=shipments&record='+encodeURIComponent(r.id||r.fileNo)+'&event='+(type==='Çıkış Bildirimi'?'departure':'arrival'));if(!response.ok)throw Error('Alıcı bilgileri alınamadı');rec=await response.json();}catch(error){noticeDeliveryStatus.textContent=error.message;return;}}
+
  mailModalTitle.textContent=type+' E-postası';
  mailModalSub.textContent=r.fileNo+' · '+(r.consignee||'');
  mailTo.value=rec.to.join(', ');
- mailCc.value=rec.cc.join(', ');
+ mailCc.value=rec.cc.join(', ');mailTo.readOnly=!isFinanceAdmin();mailCc.readOnly=!isFinanceAdmin();mailExtra.value='';
  const notice=AscendNotifications.create(r,type==='Çıkış Bildirimi'?'departure':'arrival');
  mailSubject.value=notice.subject;mailBody.value=notice.text;
  mailAttachment.value=notice.attachmentName+' (PDF hazırlanacak)';
@@ -863,7 +865,7 @@ function saveNoticeDraft(){
  const item={
    at:new Date().toLocaleString('tr-TR'),
    type:mailContext.type,
-   to:mailTo.value.trim(),
+   to:[mailTo.value.trim(),mailExtra.value.trim()].filter(Boolean).join(', '),
    cc:mailCc.value.trim(),
    sender:session?.name||session?.username||'Portal Kullanıcısı',
    subject:mailSubject.value,body:mailBody.value,status:'Taslak - gönderilmedi'

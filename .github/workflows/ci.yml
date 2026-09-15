@@ -33,6 +33,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24.19.0'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.2'
+      - run: bun install --frozen-lockfile
       - run: node --check server.mjs
       - run: node --test test/*.test.mjs
       - run: docker build -t ascend-portal:ci .

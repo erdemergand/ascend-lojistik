@@ -65,7 +65,7 @@ function saveUser(){
  let list=users();
  if(editUserIndex===null){
    if(!password){msg.textContent='Yeni kullanıcı için şifre zorunludur.';return}
-   if(password.length<6){msg.textContent='Şifre en az 6 karakter olmalı.';return}
+   if(password.length<12){msg.textContent='Şifre en az 12 karakter olmalı.';return}
    if(list.some(x=>x.username===username)){msg.textContent='Bu kullanıcı adı zaten kullanılıyor.';return}
    list.push({name,username,email,password,role,companyId,companyName,active:true});
  }else{
@@ -73,7 +73,7 @@ function saveUser(){
    const current=list[editUserIndex];
    current.name=name;current.username=username;current.email=email;current.role=role;current.companyId=companyId;current.companyName=companyName;
    if(password){
-     if(password.length<6){msg.textContent='Şifre en az 6 karakter olmalı.';return}
+     if(password.length<12){msg.textContent='Şifre en az 12 karakter olmalı.';return}
      current.password=password;
    }
    list[editUserIndex]=current;
@@ -107,7 +107,7 @@ function toggleUser(i){
  list[i].active=!list[i].active;setUsers(list);render();
 }
 function resetPassword(i){
- const p=prompt('Yeni şifreyi girin (en az 6 karakter):'); if(!p||p.length<6) return;
+ const p=prompt('Yeni şifreyi girin (en az 12 karakter):'); if(!p||p.length<12) return;
  let list=users();list[i].password=p;setUsers(list);alert('Şifre güncellendi.');
 }
 function deleteUser(i){

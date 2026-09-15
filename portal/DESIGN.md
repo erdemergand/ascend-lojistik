@@ -21,3 +21,5 @@ Runtime source: src/styles.css color and typography tokens, adapted by portal-th
 | Date | Native date input | Existing shipment forms | Native OS date picker | Shipment tests |
 | Form | User management saveUser and shared theme field labels | Company card records | Create and edit | user-company tests |
 | Theme | portal-theme.js and portal-theme.css | src/styles.css | Light and dark | Browser screenshots |
+
+Country/activity report panels use shipment country and actual carrier associations. Carrier cards carry serviceCountries and per-contact transportMode; quote matching never exposes carriers to customers. Each carrier receives a separate administrator-reviewed draft. Quote fields are required both in UI and server validation. Native select/date ownership applies to the new centers. All table body/cell backgrounds are theme tokens in dark mode, including finance and NCTS.

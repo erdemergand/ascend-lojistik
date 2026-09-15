@@ -1,4 +1,4 @@
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { SiteLayout } from "@/components/site/site-layout";
@@ -54,9 +54,79 @@ function ContactPage() {
   const { c } = useI18n();
   const k = c.contact;
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [quoteStatus, setQuoteStatus] = useState("");
+  const [quoteBusy, setQuoteBusy] = useState(false);
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
+    if (e.currentTarget.dataset["formType"] === "quote") {
+      const fields = [
+        "company",
+        "person",
+        "email",
+        "phone",
+        "direction",
+        "mode",
+        "originCountry",
+        "originCity",
+        "originAddress",
+        "destinationCountry",
+        "destinationCity",
+        "destinationAddress",
+        "goods",
+        "packages",
+        "gross",
+        "net",
+        "volume",
+        "dimensions",
+        "readyDate",
+        "incoterm",
+      ];
+      const missing = fields.find((key) => !String(form.get(key) || "").trim());
+      if (missing) {
+        setQuoteStatus("Lütfen tüm zorunlu alanları doldurun.");
+        document.getElementById(missing)?.focus();
+        return;
+      }
+      if (
+        !["packages", "gross", "net", "volume"].every((key) => Number(form.get(key)) > 0) ||
+        Number(form.get("net")) > Number(form.get("gross")) ||
+        !Number.isInteger(Number(form.get("packages")))
+      ) {
+        setQuoteStatus(
+          "Kap tam sayı, ağırlık ve hacim pozitif olmalı; net kilo brüt kiloyu aşamaz.",
+        );
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(form.get("email") || "").trim())) {
+        setQuoteStatus("Geçerli bir e-posta adresi girin.");
+        return;
+      }
+      const endpoint = import.meta.env["VITE_PORTAL_QUOTE_URL"];
+      if (endpoint) {
+        setQuoteBusy(true);
+        setQuoteStatus("Talep kaydediliyor…");
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(Object.fromEntries(form.entries())),
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || "Talep kaydedilemedi.");
+          setQuoteStatus("Talebiniz kaydedildi. Referans: " + result.id);
+          trackLead("quote_portal_saved");
+        } catch (error) {
+          setQuoteStatus(
+            error instanceof Error ? error.message : "Bağlantı kurulamadı. Lütfen tekrar deneyin.",
+          );
+        } finally {
+          setQuoteBusy(false);
+        }
+        return;
+      }
+      setQuoteStatus("Talebiniz e-posta uygulamasında hazırlanıyor; gönderimi oradan tamamlayın.");
+    }
     const lines = Array.from(form.entries())
       .filter(([, value]) => String(value).trim())
       .map(([key, value]) => `${key}: ${String(value).trim()}`);
@@ -76,42 +146,93 @@ function ContactPage() {
             <form
               onSubmit={onSubmit}
               data-form-type="quote"
+              noValidate
               className="rounded-xl border border-border bg-card p-8 card-elevated lg:p-10"
             >
               <h2 className="font-display text-2xl font-bold text-foreground">
                 {k.quoteForm.title}
               </h2>
-              <p className="mt-2 text-sm text-muted-foreground">{k.quoteForm.subtitle}</p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {import.meta.env["VITE_PORTAL_QUOTE_URL"]
+                  ? "Tüm alanları doldurun; talebiniz operasyon ekibimize kaydedilsin."
+                  : k.quoteForm.subtitle}
+              </p>
 
               <div className="mt-8 grid gap-5 sm:grid-cols-2">
-                <Field id="company" label={k.quoteForm.fields.company} />
-                <Field id="person" label={k.quoteForm.fields.person} />
+                <Field id="company" label={k.quoteForm.fields.company} required />
+                <Field id="person" label={k.quoteForm.fields.person} required />
                 <Field id="email" label={k.quoteForm.fields.email} type="email" required />
-                <Field id="phone" label={k.quoteForm.fields.phone} type="tel" />
-                <Field id="origin" label={k.quoteForm.fields.origin} />
-                <Field id="destination" label={k.quoteForm.fields.destination} />
+                <Field id="phone" label={k.quoteForm.fields.phone} type="tel" required />
+                <Field id="originCity" label={k.quoteForm.fields.origin} required />
+                <Field id="destinationCity" label={k.quoteForm.fields.destination} required />
                 <div className="grid gap-2">
                   <Label htmlFor="mode">{k.quoteForm.fields.mode}</Label>
                   <select
                     id="mode"
+                    required
                     name="mode"
                     className="h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    {k.quoteForm.modes.map((m) => (
+                    {["Hava", "Kara", "Deniz", "Demiryolu"].map((m) => (
                       <option key={m} value={m}>
                         {m}
                       </option>
                     ))}
                   </select>
                 </div>
-                <Field id="cargo" label={k.quoteForm.fields.cargo} />
+
+                <div className="grid gap-2">
+                  <Label htmlFor="direction">İşlem yönü *</Label>
+                  <select
+                    id="direction"
+                    name="direction"
+                    required
+                    className="rounded-md border border-input bg-background p-3"
+                  >
+                    <option>İthalat</option>
+                    <option>İhracat</option>
+                  </select>
+                </div>
+                <Field id="originCountry" label="Çıkış ülkesi *" required />
+                <Field id="originAddress" label="Yükleme adresi *" required />
+                <Field id="destinationCountry" label="Varış ülkesi *" required />
+                <Field id="destinationAddress" label="Teslim adresi *" required />
+                <Field id="packages" label="Toplam kap *" type="number" required />
+                <Field id="gross" label="Brüt kg *" type="number" required />
+                <Field id="net" label="Net kg *" type="number" required />
+                <Field id="volume" label="Hacim m³ *" type="number" required />
+                <Field id="readyDate" label="Yükün hazır olacağı tarih *" type="date" required />
+                <div className="grid gap-2">
+                  <Label htmlFor="incoterm">Teslim şekli *</Label>
+                  <select
+                    id="incoterm"
+                    name="incoterm"
+                    required
+                    className="rounded-md border border-input bg-background p-3"
+                  >
+                    {["EXW", "FCA", "FOB", "CFR", "CIF", "CPT", "CIP", "DAP", "DPU", "DDP"].map(
+                      (value) => (
+                        <option key={value}>{value}</option>
+                      ),
+                    )}
+                  </select>
+                </div>
+                <Field id="goods" label={k.quoteForm.fields.cargo} required />
                 <div className="sm:col-span-2 grid gap-2">
-                  <Label htmlFor="quote-message">{k.quoteForm.fields.message}</Label>
-                  <Textarea id="quote-message" name="message" rows={4} />
+                  <Label htmlFor="dimensions">Kap ölçüleri (en × boy × yükseklik, cm) *</Label>
+                  <Textarea id="dimensions" name="dimensions" rows={4} required />
                 </div>
               </div>
 
-              <Button type="submit" size="lg" className="mt-8 w-full sm:w-auto">
+              <p role="status" aria-live="polite" className="mt-4">
+                {quoteStatus}
+              </p>
+              <Button
+                type="submit"
+                size="lg"
+                disabled={quoteBusy}
+                className="mt-8 w-full sm:w-auto"
+              >
                 {k.quoteForm.submit}
               </Button>
             </form>
@@ -199,7 +320,13 @@ function Field({
   return (
     <div className="grid gap-2">
       <Label htmlFor={id}>{label}</Label>
-      <Input id={id} name={id} type={type} required={required} />
+      <Input
+        id={id}
+        name={id}
+        type={type}
+        step={type === "number" ? "any" : undefined}
+        required={required}
+      />
     </div>
   );
 }

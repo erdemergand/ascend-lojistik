@@ -1,3 +1,6 @@
+import {createMailTransport} from './smtp-transport.mjs';
+import {quoteService} from './quotes.mjs';
+import {portalOperations} from './operations.mjs';
 import { createTenantStore } from './tenant-store.mjs';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
@@ -6,6 +9,8 @@ import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 
 const assets = new Map([
+  ['/quote-center.html','quote-center.html'],
+  ['/control-center.html','control-center.html'],
   ['/world-countries.svg','world-countries.svg'],
   ['/tenant-bridge.js','tenant-bridge.js'],
   ['/portal-theme.css','portal-theme.css'],
@@ -55,8 +60,10 @@ export async function createPortalServer(env = process.env) {
     }
   }
   const tenants=await createTenantStore(env.PORTAL_DATA_FILE);
+  const operations=portalOperations(tenants),quotes=quoteService(tenants),intakeLimits=new Map();
+  const mailTransport=createMailTransport(env);let mailTimer;if(mailTransport){mailTimer=setInterval(()=>operations.deliver(mailTransport).catch(()=>tenants.database.audit('system','mail.worker-failed')),60000);mailTimer.unref();}
   const expected = digest(`Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`);
-  return createServer(async (req, res) => {
+  const server=createServer(async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
@@ -67,7 +74,7 @@ export async function createPortalServer(env = process.env) {
       res.writeHead(status, { 'Content-Type': type });
       res.end(req.method === 'HEAD' ? undefined : body);
     };
-    if (!['GET', 'HEAD'].includes(req.method) && !req.url.startsWith('/api/tenant/')) {
+    if (!['GET', 'HEAD'].includes(req.method) && !req.url.startsWith('/api/tenant/')&&!req.url.startsWith('/api/quote-request')) {
       res.setHeader('Allow', 'GET, HEAD');
       return send(405, 'Method not allowed');
     }
@@ -77,6 +84,15 @@ export async function createPortalServer(env = process.env) {
     if (pathname === '/healthz') return send(200, '{"status":"ok"}', 'application/json');
     if (pathname === '/robots.txt') return send(200, 'User-agent: *\nDisallow: /\n');
     if (!preview) return send(503, 'Portal önizlemesi kapalı.');
+    if(pathname==='/api/quote-request'){
+      const origin=env.PORTAL_QUOTE_ORIGIN||'https://www.ascendlojistik.com';
+      if(env.PORTAL_PUBLIC_QUOTES!=='true')return send(503,JSON.stringify({error:'Teklif bağlantısı henüz etkin değil.'}),'application/json');
+      if(req.headers.origin&&req.headers.origin!==origin)return send(403,'Origin denied');
+      res.setHeader('Access-Control-Allow-Origin',origin);res.setHeader('Vary','Origin');res.setHeader('Access-Control-Allow-Headers','Content-Type');res.setHeader('Access-Control-Allow-Methods','POST, OPTIONS');
+      if(req.method==='OPTIONS')return send(204,'');if(req.method!=='POST')return send(405,'Method not allowed');
+      const key=req.socket.remoteAddress,prior=intakeLimits.get(key),now=Date.now();const count=prior&&prior.until>now?prior.count:0;if(count>=10)return send(429,JSON.stringify({error:'Çok fazla talep. Daha sonra tekrar deneyin.'}),'application/json');intakeLimits.set(key,{count:count+1,until:now+3600000});
+      try{let raw='';for await(const chunk of req){raw+=chunk;if(raw.length>30000)return send(413,'Too large');}const result=quotes.intake(JSON.parse(raw));return send(201,JSON.stringify(result),'application/json');}catch(e){return send(400,JSON.stringify({error:e.message}),'application/json');}
+    }
     if (!timingSafeEqual(digest(req.headers.authorization ?? ''), expected)) {
       res.setHeader('WWW-Authenticate', 'Basic realm="Ascend internal preview", charset="UTF-8"');
       return send(401, 'Kimlik doğrulama gerekli.');
@@ -88,11 +104,26 @@ export async function createPortalServer(env = process.env) {
       try{
         if(req.method==='POST' && (req.headers['sec-fetch-site']==='cross-site'||(req.headers.origin&&req.headers.origin!== 'http://'+req.headers.host)))return json(403,{error:'Origin denied'});
         let body={};if(req.method==='POST'){let raw='';for await(const chunk of req){raw+=chunk;if(raw.length>5000000)return json(413,{error:'Too large'});}body=JSON.parse(raw||'{}');}
-        if(pathname==='/api/tenant/login'&&req.method==='POST'){const result=tenants.login(String(body.username||''),String(body.password||''));if(!result)return json(401,{error:'Kullanıcı adı veya şifre hatalı.'});res.setHeader('Set-Cookie','ascend_sid='+result.token+'; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800');return json(200,result.user);}
+        if(pathname==='/api/tenant/login'&&req.method==='POST'){const result=tenants.login(String(body.username||''),String(body.password||''),String(body.code||''));if(!result)return json(401,{error:'Kullanıcı adı veya şifre hatalı.'});res.setHeader('Set-Cookie','ascend_sid='+result.token+'; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800');return json(200,result.user);}
+        if(pathname==='/api/tenant/security/reset-complete'&&req.method==='POST')return json(200,await tenants.security('reset-complete',null,body));
         if(!principal)return json(401,{error:'Giriş gerekli'});
         if(pathname==='/api/tenant/logout'&&req.method==='POST'){tenants.logout(req);res.setHeader('Set-Cookie','ascend_sid=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0');return json(200,{});}
         if(pathname==='/api/tenant/data'&&req.method==='GET')return json(200,tenants.data(principal));
-        if(pathname==='/api/tenant/sync'&&req.method==='POST'){await tenants.sync(principal,body);return json(200,{});}
+        if(pathname==='/api/tenant/sync'&&req.method==='POST'){if(!Number.isInteger(body._revision))return json(409,{error:'Sayfayı yenileyin: kayıt sürümü gerekli.'});await tenants.sync(principal,body);return json(200,{revision:tenants.revision()});}
+        if(pathname.startsWith('/api/tenant/security/')&&req.method==='POST')return json(200,await tenants.security(pathname.split('/').pop(),principal,body));
+        if(pathname==='/api/tenant/quotes'&&req.method==='GET')return json(200,quotes.list(principal));
+        if(pathname==='/api/tenant/quotes'&&req.method==='POST')return json(201,quotes.create(principal,body));
+        if(pathname==='/api/tenant/quotes/prepare'&&req.method==='POST')return json(200,quotes.prepare(body.id,principal));
+        if(pathname==='/api/tenant/quotes/approve'&&req.method==='POST')return json(200,quotes.approve(principal,body));
+        if(pathname==='/api/tenant/audit'&&req.method==='GET')return json(200,operations.audit(principal));
+        if(pathname==='/api/tenant/backup'&&req.method==='POST')return json(200,await operations.backup(principal));
+        if(pathname==='/api/tenant/recipients'&&req.method==='GET'){const q=new URL(req.url,'http://localhost').searchParams;return json(200,operations.recipients(principal,q.get('module'),q.get('record'),q.get('event')));}
+        if(pathname==='/api/tenant/outbox'&&req.method==='GET')return json(200,operations.outbox(principal));
+        if(pathname==='/api/tenant/outbox'&&req.method==='POST')return json(200,operations.queue(principal,body));
+        if(pathname==='/api/tenant/archive'&&req.method==='GET'){const query=new URL(req.url,'http://localhost').searchParams;return json(200,operations.list(principal,query.get('module'),query.get('record')));}
+        if(pathname==='/api/tenant/archive'&&req.method==='POST')return json(200,operations.upload(principal,body));
+        if(pathname==='/api/tenant/archive/publish'&&req.method==='POST')return json(200,operations.publish(principal,body));
+        if(pathname.startsWith('/api/tenant/archive/file/')&&req.method==='GET'){const doc=operations.download(principal,pathname.split('/').pop());res.setHeader('Content-Disposition',"attachment; filename*=UTF-8''"+encodeURIComponent(doc.name));return send(200,doc.body,doc.mime);}
         if(pathname.startsWith('/api/tenant/document/')&&req.method==='GET'){
           const [,module,id]=pathname.match(/^\/api\/tenant\/document\/(shipments|ncts)\/(.+)$/)||[];
           if(!module)return json(404,{error:'Belge bulunamadı'});
@@ -100,7 +131,7 @@ export async function createPortalServer(env = process.env) {
           if(!record)return json(404,{error:'Belge bulunamadı'});return json(200,record);
         }
         return json(404,{error:'Not found'});
-      }catch(error){return json(error.status||400,{error:error.status===403?'Bu işlem için yetkiniz yok.':'İşlem kaydedilemedi. Firma ve kullanıcı bilgilerini kontrol edin.'});}
+      }catch(error){return json(error.status||400,{error:error.status===403?'Bu işlem için yetkiniz yok.':error.message||'İşlem kaydedilemedi.'});}
     }
     if(principal&&tenants.customer(principal)&&['/03_KULLANICI_YONETIMI.html','/role-preview.html'].includes(pathname))return send(403,'Bu sayfaya erişim yetkiniz yok.');
 
@@ -116,6 +147,8 @@ export async function createPortalServer(env = process.env) {
     }
     return send(200, content, filename.endsWith('.ttf') ? 'font/ttf' : filename.endsWith('.css') ? 'text/css; charset=utf-8' : filename.endsWith('.svg') ? 'image/svg+xml' : filename.endsWith('.png') ? 'image/png' : filename.endsWith('.js') ? 'text/javascript; charset=utf-8' : 'text/html; charset=utf-8');
   });
+  server.once('close',()=>{clearInterval(mailTimer);mailTransport?.close();tenants.close();});
+  return server;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

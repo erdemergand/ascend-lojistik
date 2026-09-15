@@ -46,7 +46,7 @@ input,select{padding:10px;border:1px solid #d4dde3;border-radius:8px;font-size:1
   <h2>Giriş Yap</h2><p class="muted">Denetim demosu · Yönetici, personel veya müşteri hesabınızla giriş yapın. Firma erişimi sunucu oturumuyla denetlenir. Otomatik e-posta servisi henüz bağlı değildir.</p>
   <div class="field"><label>Kullanıcı Adı</label><input id="loginUser" autocomplete="username"></div>
   <div class="field"><label>Şifre</label><input id="loginPass" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"></div>
-  <button class="primary" onclick="login()">Giriş Yap</button>
+  <div class="field"><label for="loginOtp">İki aşamalı doğrulama kodu (etkinse)</label><input id="loginOtp" inputmode="numeric" autocomplete="one-time-code" maxlength="6"></div><a href="control-center.html#reset">Şifremi sıfırla</a><button class="primary" onclick="login()">Giriş Yap</button>
   <div id="loginMsg" class="error"></div>
 </div>
 
@@ -84,7 +84,7 @@ function init(){
 function createFirstAdmin(){
   const name=frName.value.trim(), user=frUser.value.trim(), email=frEmail.value.trim(), p=frPass.value, p2=frPass2.value;
   if(!name||!user||!email||!p){frMsg.textContent='Tüm alanları doldurun.';return}
-  if(p.length<6){frMsg.textContent='Şifre en az 6 karakter olmalı.';return}
+  if(p.length<12){frMsg.textContent='Şifre en az 12 karakter olmalı.';return}
   if(p!==p2){frMsg.textContent='Şifreler eşleşmiyor.';return}
   setUsers([{name,username:user,email,password:p,role:'Yönetici',active:true}]);
   sessionStorage.setItem('ascend_session',JSON.stringify({name,username:user,email,role:'Yönetici'}));
@@ -92,10 +92,10 @@ function createFirstAdmin(){
 }
 async function login(){
  loginMsg.textContent='Giriş kontrol ediliyor…';
- try{const response=await fetch('/api/tenant/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:loginUser.value.trim(),password:loginPass.value})});
+ try{const response=await fetch('/api/tenant/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:loginUser.value.trim(),password:loginPass.value,code:document.getElementById('loginOtp').value})});
  const result=await response.json();if(!response.ok){loginMsg.textContent=result.error;return;}
  // Import old local prototype data only after the server confirms administrator identity.
- if(result.role==='Yönetici'&&!window.portalBootstrap){const data={};for(const [key,target] of [['ascend_companies','companies'],['ascend_shipments','shipments'],['ascend_ncts_records','ncts']]){const raw=localStorage.getItem(key);if(raw)data[target]=JSON.parse(raw);}const oldUsers=JSON.parse(localStorage.getItem('ascend_users')||'[]');if(oldUsers.length){const current=await (await fetch('/api/tenant/data')).json();const all=current.users.map(u=>{const old=current.companies.find(c=>String(c.id||c.name)===u.companyId);const next=old&&(data.companies||current.companies).find(c=>c.name===old.name);return next?{...u,companyId:String(next.id||next.name),companyName:next.name}:u;});for(const user of oldUsers){if(all.some(u=>u.username===user.username))continue;if(['Müşteri','Görüntüleme'].includes(user.role)&&!(data.companies||current.companies).some(c=>String(c.id||c.name)===user.companyId))user.active=false;all.push(user);}data.users=all;}if(Object.keys(data).length){const saved=await fetch('/api/tenant/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!saved.ok)throw Error('Mevcut kayıtlar aktarılamadı.');for(const key of ['ascend_companies','ascend_shipments','ascend_ncts_records','ascend_users'])localStorage.removeItem(key);}}
+ if(result.role==='Yönetici'&&!window.portalBootstrap){const serverState=await (await fetch('/api/tenant/data')).json();const data={_revision:serverState.revision};for(const [key,target] of [['ascend_companies','companies'],['ascend_shipments','shipments'],['ascend_ncts_records','ncts']]){const raw=localStorage.getItem(key);if(raw){const imported=JSON.parse(raw);if(Array.isArray(imported)&&imported.length&&!serverState[target]?.length)data[target]=imported;}}const oldUsers=JSON.parse(localStorage.getItem('ascend_users')||'[]');if(oldUsers.length){const current=await (await fetch('/api/tenant/data')).json();const all=current.users.map(u=>{const old=current.companies.find(c=>String(c.id||c.name)===u.companyId);const next=old&&(data.companies||current.companies).find(c=>c.name===old.name);return next?{...u,companyId:String(next.id||next.name),companyName:next.name}:u;});for(const user of oldUsers){if(all.some(u=>u.username===user.username))continue;if(['Müşteri','Görüntüleme'].includes(user.role)&&!(data.companies||current.companies).some(c=>String(c.id||c.name)===user.companyId))user.active=false;all.push(user);}data.users=all;}if(Object.keys(data).length){const saved=await fetch('/api/tenant/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!saved.ok)throw Error('Mevcut kayıtlar aktarılamadı.');for(const key of ['ascend_companies','ascend_shipments','ascend_ncts_records','ascend_users'])localStorage.removeItem(key);}}
  location.href='index.html';
  }catch(e){loginMsg.textContent=e.message||'Giriş tamamlanamadı.';}
 }

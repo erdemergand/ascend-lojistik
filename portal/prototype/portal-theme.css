@@ -34,3 +34,24 @@ th,.portal-intro,.report-track,.notice{background:var(--surface-soft)!important;
 }
 
 @media screen{.portal-home .portal-map{background:url('world-countries.svg') center/contain no-repeat!important;animation:none!important;opacity:1!important;filter:none!important;height:240px}.portal-home .portal-map::after{display:none}@media(max-width:650px){.portal-home .portal-map{height:170px}}}
+@media screen{
+:root[data-theme=dark]{--soft:var(--surface-soft);--ok:#163d35;--warn:#493a19}
+[data-theme=dark] table,[data-theme=dark] tbody,[data-theme=dark] tfoot,[data-theme=dark] tbody tr,[data-theme=dark] tbody td,[data-theme=dark] tfoot td{background:var(--card)!important;color:var(--text)!important;border-color:var(--border)!important}
+[data-theme=dark] tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--card) 90%,var(--surface-soft))!important}
+[data-theme=dark] tbody tr:hover td{background:var(--surface-soft)!important}
+[data-theme=dark] thead,[data-theme=dark] th{background:var(--surface-soft)!important;color:var(--text)!important}
+[data-theme=dark] .ncts-fin-card,[data-theme=dark] .contact-card,[data-theme=dark] .check-group,[data-theme=dark] .doc-chip,[data-theme=dark] .finance-totals,[data-theme=dark] .mail-preview,[data-theme=dark] .table-wrap,[data-theme=dark] .ncts-tabs button,[data-theme=dark] button.danger{background:var(--card)!important;color:var(--text)!important;border-color:var(--border)!important}
+[data-theme=dark] .ncts-tabs button.active{background:var(--primary)!important;color:var(--on-primary)!important}
+[data-theme=dark] .badge.ok,[data-theme=dark] .badge.green{background:#174137!important;color:#b9f0d0!important}
+[data-theme=dark] .badge.warn,[data-theme=dark] .badge.orange{background:#493a19!important;color:#ffe2a2!important}
+[data-theme=dark] .badge.blue{background:#173858!important;color:#cee5ff!important}
+[data-theme=dark] .finance-total .value,[data-theme=dark] .ncts-fin-card .value{color:var(--primary)!important}
+[data-theme=dark] details,[data-theme=dark] summary{color:var(--text)!important}
+}
+
+@media screen {
+[data-theme=dark] h1,[data-theme=dark] h2,[data-theme=dark] h3,[data-theme=dark] label {color:var(--text)!important}
+header a.secondary,.topbar a.secondary {display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:10px;background:var(--card)!important;color:var(--text)!important;text-decoration:none;}
+}
+
+@media screen{input,select,textarea{box-sizing:border-box}header a{color:var(--primary)}}
