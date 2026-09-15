@@ -1,3 +1,4 @@
+import { calculateVolume } from "../../portal/prototype/quote-volume.mjs";
 import { useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Mail, MapPin, Phone } from "lucide-react";
@@ -82,6 +83,20 @@ function ContactPage() {
         "readyDate",
         "incoterm",
       ];
+      try {
+        form.set(
+          "volume",
+          String(
+            calculateVolume(
+              String(form.get("dimensions") || ""),
+              String(form.get("packages") || ""),
+            ),
+          ),
+        );
+      } catch (error) {
+        setQuoteStatus(error instanceof Error ? error.message : "Ölçüleri kontrol edin.");
+        return;
+      }
       const missing = fields.find((key) => !String(form.get(key) || "").trim());
       if (missing) {
         setQuoteStatus("Lütfen tüm zorunlu alanları doldurun.");
@@ -146,6 +161,22 @@ function ContactPage() {
             <form
               onSubmit={onSubmit}
               data-form-type="quote"
+              onInput={(event) => {
+                const form = event.currentTarget;
+                const volume = form.elements.namedItem("volume") as HTMLInputElement | null;
+                if (!volume) return;
+                try {
+                  const data = new FormData(form);
+                  volume.value = String(
+                    calculateVolume(
+                      String(data.get("dimensions") || ""),
+                      String(data.get("packages") || ""),
+                    ),
+                  );
+                } catch {
+                  volume.value = "";
+                }
+              }}
               noValidate
               className="rounded-xl border border-border bg-card p-8 card-elevated lg:p-10"
             >
@@ -200,8 +231,11 @@ function ContactPage() {
                 <Field id="packages" label="Toplam kap *" type="number" required />
                 <Field id="gross" label="Brüt kg *" type="number" required />
                 <Field id="net" label="Net kg *" type="number" required />
-                <Field id="volume" label="Hacim m³ *" type="number" required />
-                <Field id="readyDate" label="Yükün hazır olacağı tarih *" type="date" required />
+                <label>
+                  Toplam hacim (m³, otomatik)
+                  <input id="volume" name="volume" readOnly className="w-full rounded border p-3" />
+                </label>
+                <Field id="readyDate" label="Eşyanın Hazır Olma Tarihi *" type="date" required />
                 <div className="grid gap-2">
                   <Label htmlFor="incoterm">Teslim şekli *</Label>
                   <select
@@ -219,7 +253,9 @@ function ContactPage() {
                 </div>
                 <Field id="goods" label={k.quoteForm.fields.cargo} required />
                 <div className="sm:col-span-2 grid gap-2">
-                  <Label htmlFor="dimensions">Kap ölçüleri (en × boy × yükseklik, cm) *</Label>
+                  <Label htmlFor="dimensions">
+                    Kap/palet ölçüleri (cm). Örnek: 3 adet: 120 x 80 x 150; 2 adet: 100 x 80 x 90 *
+                  </Label>
                   <Textarea id="dimensions" name="dimensions" rows={4} required />
                 </div>
               </div>

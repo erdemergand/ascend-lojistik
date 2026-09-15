@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 
 const assets = new Map([
+  ['/quote-volume.mjs','quote-volume.mjs'],
   ['/quote-center.html','quote-center.html'],
   ['/offer-center.html','offer-center.html'],
   ['/control-center.html','control-center.html'],
@@ -150,7 +151,7 @@ export async function createPortalServer(env = process.env) {
         content=content.replace(/<head([^>]*)>/,'<head$1><script>window.portalBootstrap='+state+';</script><script src="tenant-bridge.js"></script>');
       }
     }
-    return send(200, content, filename.endsWith('.ttf') ? 'font/ttf' : filename.endsWith('.css') ? 'text/css; charset=utf-8' : filename.endsWith('.svg') ? 'image/svg+xml' : filename.endsWith('.png') ? 'image/png' : filename.endsWith('.js') ? 'text/javascript; charset=utf-8' : 'text/html; charset=utf-8');
+    return send(200, content, filename.endsWith('.ttf') ? 'font/ttf' : filename.endsWith('.css') ? 'text/css; charset=utf-8' : filename.endsWith('.svg') ? 'image/svg+xml' : filename.endsWith('.png') ? 'image/png' : (filename.endsWith('.js')||filename.endsWith('.mjs')) ? 'text/javascript; charset=utf-8' : 'text/html; charset=utf-8');
   });
   server.once('close',()=>{clearInterval(mailTimer);mailTransport?.close();tenants.close();});
   return server;
