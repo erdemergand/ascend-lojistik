@@ -60,3 +60,5 @@ Natro teknik yanıtı; portal alt alan adı tercihi; SMTP sunucu/port/TLS ve lim
 - Geri yükleme testi: ayrı test klasörüne kopyalanmış yedekten yeni veritabanı açıldı; sevkiyat ve PDF baytları doğrulandı; var olan hedefi ezme girişimi reddedildi. Bu, gerçek bağımsız depolama felaket testi değildir.
 
 Açık kabul adımları: Natro Node.js desteği, gerçek SMTP/PDF teslimi, DNS/SSL, iki gerçek müşteriyle canlı erişim testi, kullanıcının gerçek yönetici hesabını/TOTP'yi etkinleştirmesi, demo hesapları/verilerinin üretimden çıkarılması ve bağımsız yedek hedefi. Bunlar tamamlanmadan genel yayın onayı verilmez. Yerel demo kayıtları silinmedi.
+
+EML ek inceleme yerel okuyucularla hazırdır. OCR/harici yapay zekâ ve gelen posta kutusu bağlantısı etkin değildir. Serbest metin, taranmış evrak, şifreli dosya ve tablo düzeninden doğan belirsizlikler yönetici tarafından kaynak belgeyle kontrol edilmelidir.

@@ -78,3 +78,11 @@ Kalıcı yerel kayıt için PORTAL_DATA_FILE=portal/.data/portal.json kullanıl�
 
 ## Operasyon hazırlığı — 15 Eylül 2026
 SQLite/WAL kayıt deposu, atomik sürüm kontrolü, kayıt alanı bazında yönetici işlem geçmişi, 6 saatlik yerel yedek ve doğrulama eklendi. Eski JSON dosyası ilk geçişte korunur. Gerçek yönetici etkinleştirme ve TOTP kurulumunu kullanıcı tamamlar. SMTP kapalı varsayılandır. Gönderim kuyruğu, arşiv ve ayrı acente teklif taslakları Evrak/Hesap Merkezi ile Hızlı Fiyat Al ekranlarından kullanılır. Natro dağıtım bilgileri NATRO-KURULUM.md içindedir. Canlı yayın yapılmadı.
+
+## EML içe aktarma
+
+Yönetici menüsündeki **Mailden Talep / Fiyat**, en fazla 3 MB EML ve 20 eki yerelde inceler. PDF için 30 sayfa; Office açılmış arşivi için 20 MB/2000 girdilik sınır uygulanır. İnceleme ayrı Node sürecinde 256 MB JS heap ve 25 saniye zaman sınırıyla çalışır. Aynı anda tek inceleme kabul edilir. MIME eki adları dosya yolu olarak kullanılmaz; hiçbir ek çalıştırılmaz, HTML görüntülenmez, uzak resimler açılmaz.
+
+Metin PDF, DOCX, XLSX, UTF-8 CSV/TXT okunur. Görseller ve taranmış PDF için OCR bağlı değildir. Eski DOC/XLS, şifreli ve bozuk belgeler ayrıca işaretlenir. Etiketli Türkçe/İngilizce alanlardan kural tabanlı öneri çıkarılır; serbest anlatımı anlayan bir yapay zekâ servisi yoktur. Kaynak metinler SQLite'da özel inceleme kaydı olarak tutulur; ham EML/ek dosyaları saklanmaz. Gizlilik ve saklama süresi kurum politikasına göre ayrıca belirlenmelidir.
+
+İnceleme kayıt oluşturmaz. Yönetici kaynakları doğrulayıp gerekli alanları tamamlayarak fiyatsız talep veya mevcut talebe acente alış fiyatı kaydeder. Satış fiyatı otomatik atanmaz. Aynı EML onayı tekrar edilse de tek iş kaydı oluşur. Mail gönderimi ayrı onaylı kuyruk adımıdır.

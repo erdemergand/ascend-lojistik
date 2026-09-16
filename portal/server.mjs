@@ -1,3 +1,4 @@
+import {mailImportService} from './mail-import.mjs';
 import {monitoring} from './monitoring.mjs';
 import {offerService} from './offers.mjs';
 import {createMailTransport} from './smtp-transport.mjs';
@@ -15,6 +16,7 @@ const assets = new Map([
   ['/quote-center.html','quote-center.html'],
   ['/offer-center.html','offer-center.html'],
   ['/monitor-center.html','monitor-center.html'],
+  ['/mail-import.html','mail-import.html'],
   ['/control-center.html','control-center.html'],
   ['/world-countries.svg','world-countries.svg'],
   ['/tenant-bridge.js','tenant-bridge.js'],
@@ -68,7 +70,7 @@ export async function createPortalServer(env = process.env) {
     }
   }
   const tenants=await createTenantStore(env.PORTAL_DATA_FILE,{backupDirectory:env.PORTAL_BACKUP_DIRECTORY});
-  const operations=portalOperations(tenants),quotes=quoteService(tenants),offers=offerService(tenants),monitor=monitoring(tenants),intakeLimits=new Map();
+  const operations=portalOperations(tenants),quotes=quoteService(tenants),offers=offerService(tenants),monitor=monitoring(tenants),mailImports=mailImportService(tenants,quotes,offers),intakeLimits=new Map();
   const mailTransport=createMailTransport(env);let mailTimer;if(mailTransport){mailTimer=setInterval(()=>operations.deliver(mailTransport).catch(()=>tenants.database.audit('system','mail.worker-failed')),60000);mailTimer.unref();}
   const expected = digest(`Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`);
   const server=createServer(async (req, res) => {
@@ -120,6 +122,8 @@ export async function createPortalServer(env = process.env) {
         if(pathname==='/api/tenant/data'&&req.method==='GET')return json(200,tenants.data(principal));
         if(pathname==='/api/tenant/sync'&&req.method==='POST'){if(!Number.isInteger(body._revision))return json(409,{error:'Sayfayı yenileyin: kayıt sürümü gerekli.'});await tenants.sync(principal,body);return json(200,{revision:tenants.revision()});}
         if(pathname.startsWith('/api/tenant/security/')&&req.method==='POST')return json(200,await tenants.security(pathname.split('/').pop(),principal,body));
+        if(pathname==='/api/tenant/mail-import/inspect'&&req.method==='POST')return json(200,await mailImports.inspect(principal,body));
+        if(pathname==='/api/tenant/mail-import/commit'&&req.method==='POST')return json(200,mailImports.commit(principal,body));
         if(pathname==='/api/tenant/monitor'&&req.method==='GET')return json(200,monitor.list(principal));
         if(pathname==='/api/tenant/monitor/due'&&req.method==='POST')return json(200,await monitor.due(principal,body));
         if(pathname==='/api/tenant/offers'&&req.method==='GET')return json(200,offers.list(principal));
