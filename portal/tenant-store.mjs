@@ -10,9 +10,9 @@ const pick=(obj,keys)=>Object.fromEntries(keys.filter(k=>obj[k]!==undefined).map
 const publicLogistics=['id','fileNo','direction','shipper','consignee','country','packages','weight','loadingDate','departureIssued','departureDate','arrivalDate','plate','billNo','containerNo','goods','originalDocs','reg','warehouse','warehouseNo','salePrice','financeCurrency','currency','value','paymentDate','customs','doc'];
 const publicNcts=['id','no','date','sender','receiver','origin','packages','gross','destCustoms','items'];
 const publicNctsFields=['nctsNo','nctsFormDate','nSender','field_4','field_5','nReceiver','field_9','field_10','field_16','field_17','nOriginCountry','nTotalPackages','nGross','field_21','field_22','nDestCustoms','field_30','field_31','nValueCurrency','field_32','field_33','field_34'];
-export async function createTenantStore(path){
+export async function createTenantStore(path,options={}){
  let state={users:[],companies:[],shipments:[],ncts:[]};
- const database=await openPortalDatabase(path),vault=await secretVault(path);let revision=database.current()?.revision??-1;if(database.current())state=JSON.parse(database.current().body);
+ const database=await openPortalDatabase(path,options),vault=await secretVault(path);let revision=database.current()?.revision??-1;if(database.current())state=JSON.parse(database.current().body);
  function user(data){const salt=randomBytes(16).toString('hex');return {...pick(data,['username','name','role','companyId','companyName','active','email']),salt,passwordHash:hash(data.password,salt)};}
  if(!state.users.length){state.users=[user({username:'yonetici.demo',name:'Demo Yönetici',role:'Yönetici',password:'AscendDemo!2026',active:true}),user({username:'personel.demo',name:'Demo Personel',role:'Operasyon',password:'AscendDemo!2026',active:true}),user({username:'musteri.demo',name:'Demo Müşteri',role:'Görüntüleme',companyId:'demo-anadolu',password:'AscendDemo!2026',active:true})];state.companies=[{id:'demo-anadolu',name:'DEMO Anadolu Dış Ticaret Ltd. Şti.'}];}
  function bind(record,module){if(Array.isArray(record.customerCompanyIds))return record;const names=module==='ncts'?[record.sender,record.receiver]:[record.shipper,record.consignee];return {...record,customerCompanyIds:state.companies.filter(c=>names.includes(c.name)).map(c=>String(c.id||c.name))};}
@@ -36,7 +36,7 @@ export async function createTenantStore(path){
  const cleaned={};
  for(const key of ['shipments','ncts'])if(body[key]){
  cleaned[key]=state[key].map(r=>({...r}));
- for(const incoming of body[key]){const id=incoming.id||incoming.fileNo||incoming.no;if(!id)throw Error('Dosya no gerekli');const index=cleaned[key].findIndex(r=>(r.id||r.fileNo||r.no)===id);const safe={...incoming};for(const field of ['purchasePrice','profit','share','shareTL','exchangeRate','salePrice','financeCurrency','freightFee','guaranteeFee','customerCompanyIds'])delete safe[field];if(index<0)cleaned[key].push(safe);else cleaned[key][index]={...cleaned[key][index],...safe};}
+ for(const incoming of body[key]){const id=incoming.id||incoming.fileNo||incoming.no;if(!id)throw Error('Dosya no gerekli');const index=cleaned[key].findIndex(r=>(r.id||r.fileNo||r.no)===id);const safe={...incoming};for(const field of ['purchasePrice','profit','share','shareTL','exchangeRate','salePrice','financeCurrency','freightFee','guaranteeFee','paymentDueDate','sourceQuoteId','sourceOfferId','customerCompanyIds'])delete safe[field];if(index<0)cleaned[key].push(safe);else cleaned[key][index]={...cleaned[key][index],...safe};}
  }
  if(body.companies)cleaned.companies=body.companies;
  body=cleaned;

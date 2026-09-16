@@ -4,6 +4,7 @@ const env=process.env,checks=[];
 const check=(name,ok)=>checks.push({name,ok:!!ok});
 check('HTTPS portal adresi',/^https:\/\/[^/]+$/.test(env.PORTAL_PUBLIC_ORIGIN||''));
 check('Kalıcı veri yolu',!!env.PORTAL_DATA_FILE);
+check('Ayrı yedek hedefi yapılandırılmış',!!env.PORTAL_BACKUP_DIRECTORY);
 check('SMTP gönderimi etkin',env.PORTAL_MAIL_ENABLED==='true');
 check('SMTP ayarları',env.SMTP_HOST&&env.SMTP_USER&&env.SMTP_PASSWORD&&env.SMTP_FROM&&['465','587'].includes(env.SMTP_PORT));
 check('Site teklif bağlantısı etkin',env.PORTAL_PUBLIC_QUOTES==='true'&&env.PORTAL_QUOTE_ORIGIN==='https://www.ascendlojistik.com');

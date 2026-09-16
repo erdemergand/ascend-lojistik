@@ -50,3 +50,13 @@ Site teklif bağlantısını önceki mailto sürümüne döndürün. Yeni gönde
 ## Kullanıcıdan beklenen bilgiler
 
 Natro teknik yanıtı; portal alt alan adı tercihi; SMTP sunucu/port/TLS ve limitler; DNS/SSL yönetim yöntemi; bağımsız yedek hedefi. Şifreleri sohbetten paylaşmayın. Gerçek teslim/rol/PDF kabulü tamamlanmadan “hatasız” veya “canlıya hazır” olarak işaretlenmez.
+
+## 16 Eylül kabul hazırlığı
+
+- Tekliften dosya: aynı talepten eşzamanlı iki istek ve farklı kabul edilmiş tekliflerle tek dosya oluşması test edildi. Ortak ASC sırası NCTS kayıtlarını da dikkate alır.
+- Takip Merkezi: yöneticiye açık hata, teklif geçerlilik ve ödeme vade listeleri. Vade uyarısı, kaydedilmiş vade ve ödeme tarihine dayanır; kısmi tahsilat/cari bakiyesi hakkında sonuç çıkarmaz.
+- PDF eki: kuyrukta belge kimliği, dosya adı, sürüm ve SHA-256 saklanır; başarılı SMTP işlemi alıcıları ve ek kimliğini denetim kaydına yazar. SMTP kabulü gelen kutusuna teslim garantisi değildir.
+- PORTAL_BACKUP_DIRECTORY ile ayrı erişim izinleri verilmiş ağ klasörü veya bağlı depolama hedefi tanımlanabilir. Kopya SHA-256 ve SQLite bütünlük kontrolünden geçer. Hedefin farklı fiziksel sunucuda olması, şifreleme ve saklama politikası kurulumda ayrıca doğrulanmalıdır. Hedef henüz kullanıcı tarafından belirlenmedi; otomatik harici aktarım etkin değil.
+- Geri yükleme testi: ayrı test klasörüne kopyalanmış yedekten yeni veritabanı açıldı; sevkiyat ve PDF baytları doğrulandı; var olan hedefi ezme girişimi reddedildi. Bu, gerçek bağımsız depolama felaket testi değildir.
+
+Açık kabul adımları: Natro Node.js desteği, gerçek SMTP/PDF teslimi, DNS/SSL, iki gerçek müşteriyle canlı erişim testi, kullanıcının gerçek yönetici hesabını/TOTP'yi etkinleştirmesi, demo hesapları/verilerinin üretimden çıkarılması ve bağımsız yedek hedefi. Bunlar tamamlanmadan genel yayın onayı verilmez. Yerel demo kayıtları silinmedi.

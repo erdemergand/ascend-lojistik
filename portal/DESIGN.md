@@ -29,3 +29,5 @@ Teklif Yönetimi: administrator-only offer API and UI; native selects/dates, sha
 Offer workflow displays original unpriced request, separate carrier inquiry previews, received carrier prices, then customer sale mail. Sale price is nullable until decided; no customer mail can queue without a saved sale price.
 
 Carrier contact transportModes uses a native checkbox group with explicit selections; no selection means no quote matching. Legacy transportMode is read only when the array is absent. Customer privacy rules remain unchanged.
+
+Takip Merkezi is administrator-only, using shared theme and native dates/selects. Due reminders derive from recorded due/payment dates, not assumed balances. Conversion selects registered shipment parties, copies approved pricing and cargo, and deduplicates by source request across offers. Backups explicitly distinguish local verification from configured separate-target verification. SMTP acceptance is not inbox delivery.
